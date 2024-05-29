@@ -12,11 +12,14 @@ void handleThread(void* x){
     int bytes_recieved;
     char* readBuffer[1024];
     while(true){
-        //read(connection,readBuffer,512);
+        //for linux - read(connection,readBuffer,512);
+        //for windows::
         bytes_recieved = recv(connection,readBuffer,512,0);
         if(bytes_recieved > 0){
             int* input = ((int*)readBuffer);
             if(input[0] == 12323){
+                //temporary input handling
+                //TODO - making sure whole packet is read before taking any action - inner while loop
                 if(input[1] != 0){
                     printf("player %d: ", playerNum);
                     if((input[1] % 2) == 1)
@@ -53,7 +56,7 @@ int main() {
 
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (sockfd == -1) { //-1 when socket fails to socket
+    if (sockfd == -1) { //-1 when socket cannot be created
         printf("error: %s\n", strerror(errno));
     }
 
