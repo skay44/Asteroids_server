@@ -5,7 +5,10 @@
 #include <pthread.h>
 #include <io.h>
 
-void handleThread(void* x){
+#include "vector.h"
+
+
+void* handleThread(void* x){
     int* data = (int*)x;
     int connection = data[0];
     int playerNum = data[1];
@@ -41,6 +44,7 @@ void handleThread(void* x){
 int main() {
 
 
+
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(2278);
@@ -69,6 +73,8 @@ int main() {
     }
 
     int playerNum = 0;
+    vectorThread threads;
+    vectorThreadCreate(&threads);
     while(true){
         struct sockaddr_in bingus;
         int length = sizeof(bingus);
@@ -77,8 +83,13 @@ int main() {
         printf("connection accepted: %d\n",connection,strerror(errno));
         pthread_t thread_id;
         pthread_create(&thread_id, NULL, handleThread, paramData);
+        vectorThreadPush(&threads,thread_id);
         playerNum++;
+
+        printf("current players: ");
+        vectorIntWrite(&threads);
     }
+
     WSACleanup();
     return 0;
 }

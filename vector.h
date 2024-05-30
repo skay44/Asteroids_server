@@ -1,7 +1,9 @@
 //
 // Created by Ja on 5/28/2024.
 //
+#include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #ifndef SERVER_VECTOR_H
 #define SERVER_VECTOR_H
@@ -12,20 +14,21 @@ typedef struct _vectorInt{
     int* arr;
 } vectorInt;
 
-void vectorIntCreate(vectorInt* a){
-    a->arr = malloc(sizeof(int)*1);
-    a->capacity = 1;
-    a->size = 0;
-}
+typedef struct _vectorThread{
+    int size;
+    int capacity;
+    pthread_t* arr;
+} vectorThread;
 
-void add(vectorInt* a, int toAdd) {
-    a->size++;
-    if (a->size >= a->capacity) {
-        a->capacity *= 2;
-        a->arr = realloc(a->arr, sizeof(int) * a->capacity);
-    }
-    (*a).arr[a->size - 1] = toAdd;
-}
+void vectorIntCreate(vectorInt* a);
+void vectorIntPush(vectorInt* a, int toAdd);
+void vectorIntRemove(vectorInt* a,int toRemove);
+void vectorIntWrite(vectorInt* a);
+
+void vectorThreadCreate(vectorThread* a);
+void vectorThreadPush(vectorThread* a, pthread_t toAdd);
+void vectorThreadRemove(vectorThread* a,pthread_t toRemove);
+void vectorThreadWrite(vectorThread* a);
 
 #endif //SERVER_VECTOR_H
 
