@@ -13,7 +13,7 @@ void* handleThread(void* x){
     int connection = data[0];
     int playerNum = data[1];
     int bytes_recieved;
-    char* readBuffer[1024];
+    char readBuffer[1024];
     while(true){
         //for linux - read(connection,readBuffer,512);
         //for windows::
@@ -36,15 +36,12 @@ void* handleThread(void* x){
             }
         }
         for(int i = 0; i < 512;i++)
-            readBuffer[0] = "\0";
+            readBuffer[0] = '\0';
     }
 }
 
 
 int main() {
-
-
-
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(2278);

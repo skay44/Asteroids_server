@@ -18,6 +18,10 @@ void vectorIntPush(vectorInt* a, int toAdd) {
     (*a).arr[a->size - 1] = toAdd;
 }
 
+void vectorIntPop(vectorInt* a, int toAdd){
+    a->size--;
+}
+
 void vectorIntRemove(vectorInt* a,int toRemove){
     int iterator = 0;
     while(iterator < a->size){
@@ -33,6 +37,16 @@ void vectorIntRemove(vectorInt* a,int toRemove){
     a->size--;
 }
 
+//UNTESTED
+void vectorIntRemoveAt(vectorInt* a,int toRemove){
+    int iterator = toRemove;
+    while(iterator < a->size-1){
+        a->arr[iterator] = a->arr[iterator+1];
+        iterator++;
+    }
+    a->size--;
+}
+
 void vectorIntWrite(vectorInt* a){
     int iterator = 0;
     while(iterator < a->size){
@@ -40,6 +54,16 @@ void vectorIntWrite(vectorInt* a){
         iterator++;
     }
     printf("\n");
+}
+
+void vectorIntClear(vectorInt* a){
+    a->size = 0;
+}
+
+void vectorIntDelete(vectorInt* a){
+    free(a->arr);
+    a->size = 0;
+    a->capacity = 0;
 }
 
 void vectorThreadCreate(vectorThread* a){
@@ -81,4 +105,13 @@ void vectorThreadWrite(vectorThread* a){
     printf("\n");
 }
 
+void vectorThreadClear(vectorThread* a){
+    a->size = 0;
+}
+
+void vectorThreadDelete(vectorThread* a){
+    free(a->arr);
+    a->size = 0;
+    a->capacity = 0;
+}
 
