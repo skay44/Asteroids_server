@@ -27,7 +27,7 @@ void vectorIntCreate(vectorInt* a);
 //adds value at the end of vector
 void vectorIntPush(vectorInt* a, int toAdd);
 //remove last value
-void vectorIntPop(vectorInt* a, int toAdd);
+void vectorIntPop(vectorInt* a);
 //removes first encounter of specified value
 void vectorIntRemove(vectorInt* a,int toRemove);
 //removes value at specified index
@@ -41,7 +41,9 @@ void vectorIntDelete(vectorInt* a);
 
 void vectorThreadCreate(vectorThread* a);
 void vectorThreadPush(vectorThread* a, pthread_t toAdd);
+void vectorThreadPop(vectorThread* a);
 void vectorThreadRemove(vectorThread* a,pthread_t toRemove);
+void vectorThreadRemoveAt(vectorThread* a,int toRemove);
 void vectorThreadWrite(vectorThread* a);
 void vectorThreadClear(vectorThread* a);
 void vectorThreadDelete(vectorThread* a);

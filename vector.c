@@ -18,7 +18,7 @@ void vectorIntPush(vectorInt* a, int toAdd) {
     (*a).arr[a->size - 1] = toAdd;
 }
 
-void vectorIntPop(vectorInt* a, int toAdd){
+void vectorIntPop(vectorInt* a){
     a->size--;
 }
 
@@ -37,7 +37,6 @@ void vectorIntRemove(vectorInt* a,int toRemove){
     a->size--;
 }
 
-//UNTESTED
 void vectorIntRemoveAt(vectorInt* a,int toRemove){
     int iterator = toRemove;
     while(iterator < a->size-1){
@@ -81,6 +80,10 @@ void vectorThreadPush(vectorThread* a, pthread_t toAdd){
     (*a).arr[a->size - 1] = toAdd;
 }
 
+void vectorThreadPop(vectorThread* a){
+    a->size--;
+}
+
 void vectorThreadRemove(vectorThread* a,pthread_t toRemove){
     int iterator = 0;
     while(iterator < a->size){
@@ -89,6 +92,15 @@ void vectorThreadRemove(vectorThread* a,pthread_t toRemove){
         }
         iterator++;
     }
+    while(iterator < a->size-1){
+        a->arr[iterator] = a->arr[iterator+1];
+        iterator++;
+    }
+    a->size--;
+}
+
+void vectorThreadRemoveAt(vectorThread* a,int toRemove){
+    int iterator = toRemove;
     while(iterator < a->size-1){
         a->arr[iterator] = a->arr[iterator+1];
         iterator++;
