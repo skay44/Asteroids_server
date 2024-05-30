@@ -84,7 +84,7 @@ int main() {
         playerNum++;
 
         printf("current players: ");
-        vectorIntWrite(&threads);
+        vectorThreadWrite(&threads);
     }
 
     WSACleanup();
