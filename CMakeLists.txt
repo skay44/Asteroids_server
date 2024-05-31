@@ -3,7 +3,14 @@ project(Server C)
 
 set(CMAKE_C_STANDARD 99)
 
+
 find_package(Threads REQUIRED)
+
+add_executable(Server main.c vector.h vector.c
+        gameState.h
+        gameEntities.h
+)
+
 
 # Server executable
 add_executable(Server main.c)

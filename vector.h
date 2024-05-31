@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+#include "gameEntities.h"
+
 #ifndef SERVER_VECTOR_H
 #define SERVER_VECTOR_H
 
@@ -19,6 +21,18 @@ typedef struct _vectorThread{
     int capacity;
     pthread_t* arr;
 } vectorThread;
+
+typedef struct _vectorPlayerState{
+    int size;
+    int capacity;
+    playerState* arr;
+} vectorPlayerState;
+
+typedef struct _vectorProjectile{
+    int size;
+    int capacity;
+    projectile* arr;
+} vectorProjectile;
 
 //following behaviour descriptons are the same for every vector type (int, thread, ...)
 
@@ -47,6 +61,24 @@ void vectorThreadRemoveAt(vectorThread* a,int toRemove);
 void vectorThreadWrite(vectorThread* a);
 void vectorThreadClear(vectorThread* a);
 void vectorThreadDelete(vectorThread* a);
+
+void vectorPlayerStateCreate(vectorPlayerState* a);
+void vectorPlayerStatePush(vectorPlayerState* a, playerState toAdd);
+void vectorPlayerStatePop(vectorPlayerState* a);
+void vectorPlayerStateRemove(vectorPlayerState* a,playerState toRemove);
+void vectorPlayerStateRemoveAt(vectorPlayerState* a,int toRemove);
+void vectorPlayerStateWrite(vectorPlayerState* a);
+void vectorPlayerStateClear(vectorPlayerState* a);
+void vectorPlayerStateDelete(vectorPlayerState* a);
+
+void vectorProjectileCreate(vectorProjectile* a);
+void vectorProjectilePush(vectorProjectile* a, projectile toAdd);
+void vectorProjectilePop(vectorProjectile* a);
+void vectorProjectileRemove(vectorProjectile* a,projectile toRemove);
+void vectorProjectileRemoveAt(vectorProjectile* a,int toRemove);
+void vectorProjectileWrite(vectorProjectile* a);
+void vectorProjectileClear(vectorProjectile* a);
+void vectorProjectileDelete(vectorProjectile* a);
 
 #endif //SERVER_VECTOR_H
 

@@ -6,6 +6,8 @@
 #include <io.h>
 #include <conio.h>
 #include "vector.h"
+#include "gameEntities.h"
+#include "gameState.h"
 
 #pragma pack(push,1)
 typedef struct{
@@ -67,6 +69,9 @@ void removePlayer(int connection)
 
 Player* getPlayer(int connection)
 {
+
+
+
 
     pthread_mutex_lock(&clientMutex);
     for(int i=0; MAX_PLAYERS > i; i++)
@@ -187,6 +192,11 @@ int main() {
 
     int playerNum = 0;
 
+    vectorThread threads;
+    pthread_t mainGamepley;
+    vectorThreadCreate(&threads);
+
+    pthread_create(&mainGamepley, NULL, gamePlayLoop, NULL);
 
     while(true){
         struct sockaddr_in bingus;
