@@ -12,6 +12,8 @@ add_executable(Server
         vector.c
         gameState.h
         gameEntities.h
+        serverSend.h
+        data.h
 )
 
 
@@ -21,5 +23,6 @@ target_link_libraries(Server ws2_32 ${CMAKE_THREAD_LIBS_INIT})
 add_executable(Client KlientTest.c vector.c
         KlientTest.c
         playerConnection.h
-        data.h)
+        data.h
+        gameEntities.h)
 target_link_libraries(Client ws2_32 ${CMAKE_THREAD_LIBS_INIT})

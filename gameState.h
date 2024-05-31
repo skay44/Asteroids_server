@@ -13,15 +13,13 @@
 
 void* gameplayLoop(void* params){
     GLP* a = (GLP*) params;
-    vectorPlayerStateCreate(&players);
-    vectorProjectileCreate(&projectiles);
+    vectorPlayerStateCreate(&players);      //informacje o graczach (vector graczy)
+    vectorProjectileCreate(&projectiles);   //informacje o asteroidach (vector asteroidow)
 
 
     while(1){
-        char key = _getch();
-        _getch();
-        printf("%d: ", players.size);
-        vectorPlayerStateWrite(&players);
+
+
     }
 }
 

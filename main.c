@@ -11,9 +11,8 @@
 #include "gameState.h"
 #include "playerConnection.h"
 #include "data.h"
+#include "serverSend.h"
 
-
-//function for each thread
 
 int main() {
     //locks in data.h
@@ -69,6 +68,9 @@ int main() {
     glp.projectiles = &projectiles;
 
     pthread_create(&mainGamepley, NULL, gameplayLoop, &glp);
+
+    pthread_t sendThread;
+    pthread_create(&sendThread,NULL,handleSend,NULL);
 
     while(true){
         struct sockaddr_in bingus;

@@ -70,6 +70,7 @@ void* handleThread(void* x){
             debugFrame(&f);
 
             playerState ps;
+            ps.connectionAddr = connection;
             ps.posX = f.XPosition;
             ps.posY = f.YPosition;
             ps.speedY = f.XVelocity;

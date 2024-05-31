@@ -6,6 +6,7 @@
 #define SERVER_GAMEENTITIES_H
 
 typedef struct _playerState {
+    int connectionAddr;
     short playerID;
     char ifShoot;
     char keys;
@@ -16,6 +17,15 @@ typedef struct _playerState {
     float rotation;
 } playerState;
 
+typedef struct _playerSendFrame {
+    short playerID;
+    float posX;
+    float posY;
+    float speedX;
+    float speedY;
+    float rotation;
+} playerSendFrame;
+
 typedef struct _projectile {
     short projectileID;
     float posX;
@@ -25,6 +35,13 @@ typedef struct _projectile {
     float rotation;
 } projectile;
 
-
+/*void debugSendFrame(playerSendFrame* f){
+    printf("{ id: %d ",f->playerID);
+    printf("Xp: %f ",f->posX);
+    printf("Yp: %f ",f->posY);
+    printf("a: %f ",f->rotation);
+    printf("Xps: %f ",f->speedX);
+    printf("Yps: %f }\n",f->speedY);
+}*/
 
 #endif //SERVER_GAMEENTITIES_H

@@ -4,7 +4,8 @@
 #include <conio.h>
 #include <limits.h>
 #include <unistd.h>
-
+#include <pthread.h>
+#include "gameEntities.h"
 
 #pragma pack(push,1)
 typedef struct{
@@ -34,6 +35,31 @@ void sendFrame(SOCKET sockfd, Frame frame)
         exit(1);
     }
 }
+
+void* handleInput(void* data)
+{
+    SOCKET sockfd = (SOCKET)data;
+    playerSendFrame frame;
+    int bytes_recieved = 0;
+    char readBuffer[sizeof(playerSendFrame )];
+    while(1) {
+        //read(connection,readBuffer,512);
+        while (bytes_recieved < sizeof(playerSendFrame)) {
+            bytes_recieved += recv(sockfd, readBuffer + bytes_recieved, sizeof(playerSendFrame), 0);
+            if (bytes_recieved == 0) break;
+        }
+        if(bytes_recieved > 0) {
+            playerSendFrame f = *((playerSendFrame*)&readBuffer);
+            printf("Get data from server\n");
+            printf("Data: %d",f.playerID);
+        }
+        bytes_recieved = 0;
+        for(int i = 0; i < 512;i++)
+            readBuffer[0] = '\0';
+    }
+    return NULL;
+}
+
 int main()
 {
     WSADATA wsadata;
@@ -59,7 +85,7 @@ int main()
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(2278);
     gethostname(hostname,sizeof(hostname)-1);
-    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.0.30");
+    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.1.104");
 
     result = connect(sockfd, (struct sockaddr*)& serverAddr, sizeof(serverAddr));
     if(result == SOCKET_ERROR)
@@ -74,6 +100,8 @@ int main()
         printf("Connected with server\n");
     }
 
+    pthread_t inputThread;
+    pthread_create(&inputThread,NULL,handleInput,&sockfd);
     char charToSend='a';
 
     while(1)
