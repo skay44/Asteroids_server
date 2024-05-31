@@ -49,7 +49,7 @@ void debugFrame(Frame* f){
 }
 
 
-void* handleThread(void* x){
+void* handleInput(void* x){
     GLP2* data = (GLP2*)x;
     int connection = data->connection;
     int playerNum = data->playerNum;
