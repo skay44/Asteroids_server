@@ -6,7 +6,8 @@
 #include <io.h>
 
 #include "vector.h"
-
+#include "gameEntities.h"
+#include "gameState.h"
 
 void* handleThread(void* x){
     int* data = (int*)x;
@@ -71,7 +72,11 @@ int main() {
 
     int playerNum = 0;
     vectorThread threads;
+    pthread_t mainGamepley;
     vectorThreadCreate(&threads);
+
+    pthread_create(&mainGamepley, NULL, gamePlayLoop, NULL);
+
     while(true){
         struct sockaddr_in bingus;
         int length = sizeof(bingus);
