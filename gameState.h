@@ -9,7 +9,6 @@
 #include "vector.h"
 #include "data.h"
 
-
 void* gameplayLoop(void* params){
     LARGE_INTEGER frequency;        // ticks per second
     LARGE_INTEGER t1, t2;           // ticks
@@ -22,11 +21,9 @@ void* gameplayLoop(void* params){
     QueryPerformanceFrequency(&frequency);
 
 
-
     while(1){
         // start timer
         QueryPerformanceCounter(&t2);
-
         //deltaTime in ms
         deltaTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
 

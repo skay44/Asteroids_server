@@ -39,8 +39,8 @@ void debugFrame(Frame* f){
     printf("k: %d ",f->KeyboardKeys);
     printf("Xp: %f ",f->XPosition);
     printf("Yp: %f ",f->YPosition);
-    printf("Xv: %f ",f->YPosition);
-    printf("Yv: %f ",f->YPosition);
+    printf("Xv: %f ",f->XVelocity);
+    printf("Yv: %f ",f->YVelocity);
     printf("a: %f ",f->angle);
     printf("Xps: %f ",f->XPositionShot);
     printf("Yps: %f ",f->YPositionShot);

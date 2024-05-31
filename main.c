@@ -81,7 +81,11 @@ int main() {
         newGLP->connection = connection;
         newGLP->playerNum = playerNum;
         pthread_t thread_id;
-        if(pthread_create(&thread_id, NULL, handleThread, newGLP) != 0)
+        pthread_t thread_id2;
+        if(
+                pthread_create(&thread_id, NULL, handleThread, newGLP) != 0 &&
+                pthread_create(&thread_id2, NULL, handleThread, newGLP) != 0
+        )
         {
             printf("Error with connection\n");
             closesocket(sockfd);
