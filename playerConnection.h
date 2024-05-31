@@ -56,14 +56,17 @@ void* handleThread(void* x){
     vectorPlayerState* players = data->players;
     vectorProjectile* projectiles = data->projectiles;
     Frame f;
-    int bytes_recieved;
-    char readBuffer[1024];
+    int bytes_recieved = 0;
+    char readBuffer[sizeof(Frame)];
     while(true){
         //read(connection,readBuffer,512);
-        bytes_recieved = recv(connection,readBuffer,512,0);
+        while(bytes_recieved < sizeof(Frame)){
+            bytes_recieved += recv(connection,readBuffer+bytes_recieved,sizeof(Frame),0);
+            if(bytes_recieved == 0) break;
+        }
         if(bytes_recieved > 0){
             f = *((Frame*)&readBuffer);
-            printf("Player %d, connection %d:", playerNum,connection);
+            printf("Player %d, connection %d: ", playerNum,connection);
             debugFrame(&f);
 
             playerState ps;
@@ -82,9 +85,10 @@ void* handleThread(void* x){
             }
         }
         else{
-            printf("Connection lost with player: %d", playerNum);
+            printf("Connection lost with player: %d\n", playerNum);
             break;
         }
+        bytes_recieved = 0;
         for(int i = 0; i < 512;i++)
             readBuffer[0] = '\0';
     }
