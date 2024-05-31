@@ -10,8 +10,6 @@
 #ifndef SERVER_DATA_H
 #define SERVER_DATA_H
 
-//amogus
-
 pthread_mutex_t playerVectorLock;
 pthread_mutex_t projectileVectorLock;
 
@@ -30,7 +28,6 @@ void addToProjectileVector(projectile toAdd){
     pthread_mutex_unlock(&projectileVectorLock);
 }
 
-//TODO usunac
 bool findInPlayerVector(int check){
     pthread_mutex_lock(&playerVectorLock);
     for(int i = 0; i < players.size; i++){
