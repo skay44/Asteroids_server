@@ -183,7 +183,7 @@ void vectorPlayerStateRemoveAt(vectorPlayerState* a,int toRemove){
 void vectorPlayerStateWrite(vectorPlayerState* a){
     int iterator = 0;
     while(iterator < a->size){
-        printf("%llu ", a->arr[iterator]);
+        printf("%llu ", a->arr[iterator].playerID);
         iterator++;
     }
     printf("\n");
@@ -224,7 +224,7 @@ void vectorProjectileRemove(vectorProjectile* a,projectile toRemove){
     int iterator = 0;
     while(iterator < a->size){
         if(
-            toRemove.playerID == a->arr[iterator].playerID &&
+            toRemove.projectileID == a->arr[iterator].projectileID &&
             toRemove.posX == a->arr[iterator].posX &&
             toRemove.posY == a->arr[iterator].posY &&
             toRemove.speedX == a->arr[iterator].speedX &&
@@ -253,7 +253,7 @@ void vectorProjectileRemoveAt(vectorProjectile* a,int toRemove){
 void vectorProjectileWrite(vectorProjectile* a){
     int iterator = 0;
     while(iterator < a->size){
-        printf("%llu ", a->arr[iterator]);
+        printf("%llu ", a->arr[iterator].projectileID);
         iterator++;
     }
     printf("\n");

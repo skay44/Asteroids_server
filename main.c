@@ -10,10 +10,16 @@
 #include "gameEntities.h"
 #include "gameState.h"
 #include "playerConnection.h"
+#include "data.h"
+
 
 //function for each thread
 
 int main() {
+    //locks in data.h
+    pthread_mutex_init(&playerVectorLock, NULL);
+    pthread_mutex_init(&projectileVectorLock, NULL);
+
     //Create a socket struct
     struct sockaddr_in addr;
     addr.sin_family = AF_INET;
@@ -58,10 +64,6 @@ int main() {
     pthread_t mainGamepley;
     int playerNum = 0;
 
-    //do not create vectors, gameplayLoop already does that
-    vectorPlayerState players;
-    vectorProjectile projectiles;
-
     GLP glp;
     glp.players = &players;
     glp.projectiles = &projectiles;
@@ -90,6 +92,9 @@ int main() {
             playerNum++;
         }
     }
+
+    pthread_mutex_destroy(&playerVectorLock);
+    pthread_mutex_destroy(&projectileVectorLock);
     closesocket(sockfd);
     WSACleanup();
     return 0;

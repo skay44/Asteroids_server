@@ -20,5 +20,6 @@ target_link_libraries(Server ws2_32 ${CMAKE_THREAD_LIBS_INIT})
 # Client executable
 add_executable(Client KlientTest.c vector.c
         KlientTest.c
-        playerConnection.h)
+        playerConnection.h
+        data.h)
 target_link_libraries(Client ws2_32 ${CMAKE_THREAD_LIBS_INIT})

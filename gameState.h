@@ -7,18 +7,21 @@
 
 #include <time.h>
 #include "vector.h"
+#include "data.h"
+
 
 
 void* gameplayLoop(void* params){
     GLP* a = (GLP*) params;
-    vectorPlayerState* players = a->players;
-    vectorProjectile* projectiles = a->projectiles;
-    vectorPlayerStateCreate(players);
-    vectorProjectileCreate(projectiles);
+    vectorPlayerStateCreate(&players);
+    vectorProjectileCreate(&projectiles);
 
 
-    while(a->players->size > 0){
-        vectorPlayerStateWrite(players);
+    while(1){
+        char key = _getch();
+        _getch();
+        printf("%d: ", players.size);
+        vectorPlayerStateWrite(&players);
     }
 }
 

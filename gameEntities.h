@@ -17,7 +17,7 @@ typedef struct _playerState {
 } playerState;
 
 typedef struct _projectile {
-    short playerID;
+    short projectileID;
     float posX;
     float posY;
     float speedX;

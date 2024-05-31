@@ -9,9 +9,9 @@
 
 #include <io.h>
 #include <conio.h>
-#include "vector.h"
 #include "gameEntities.h"
 #include "gameState.h"
+#include "data.h"
 
 #ifndef SERVER_PLAYERCONNECTION_H
 #define SERVER_PLAYERCONNECTION_H
@@ -65,6 +65,21 @@ void* handleThread(void* x){
             f = *((Frame*)&readBuffer);
             printf("Player %d, connection %d:", playerNum,connection);
             debugFrame(&f);
+
+            playerState ps;
+            ps.posX = f.XPosition;
+            ps.posY = f.YPosition;
+            ps.speedY = f.XVelocity;
+            ps.speedX = f.YVelocity;
+            ps.playerID = playerNum;
+            ps.ifShoot = f.Shot;
+            ps.keys = f.KeyboardKeys;
+            ps.rotation = f.angle;
+            if(!findInPlayerVector(playerNum)){
+                addToPlayerVector(ps);
+            }
+            else{
+            }
         }
         else{
             printf("Connection lost with player: %d", playerNum);
