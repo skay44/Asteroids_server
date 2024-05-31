@@ -80,5 +80,17 @@ void vectorProjectileWrite(vectorProjectile* a);
 void vectorProjectileClear(vectorProjectile* a);
 void vectorProjectileDelete(vectorProjectile* a);
 
+typedef struct gameLoopParams{
+    vectorPlayerState* players;
+    vectorProjectile* projectiles;
+} GLP;
+
+typedef struct gameLoopParams2{
+    vectorPlayerState* players;
+    vectorProjectile* projectiles;
+    int connection;
+    int playerNum;
+} GLP2;
+
 #endif //SERVER_VECTOR_H
 

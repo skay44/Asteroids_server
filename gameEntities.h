@@ -25,4 +25,6 @@ typedef struct _projectile {
     float rotation;
 } projectile;
 
+
+
 #endif //SERVER_GAMEENTITIES_H

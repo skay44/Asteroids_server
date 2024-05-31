@@ -2,6 +2,9 @@
 #include <winsock2.h>
 #include <string.h>
 #include <conio.h>
+#include <limits.h>
+#include <unistd.h>
+
 
 #pragma pack(push,1)
 typedef struct{
@@ -52,9 +55,11 @@ int main()
         return 1;
     }
 
+    char hostname[100];
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(2278);
-    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.1.104");
+    gethostname(hostname,sizeof(hostname)-1);
+    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.0.30");
 
     result = connect(sockfd, (struct sockaddr*)& serverAddr, sizeof(serverAddr));
     if(result == SOCKET_ERROR)
