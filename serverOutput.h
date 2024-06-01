@@ -58,8 +58,8 @@ void* handleOutput()
                 //zeby to zrobic musisz pobrac dane o graczu j i connection number z gracza i
                 //wyslij
                 //if(players.arr[j].playerID != players.arr[i].playerID){
-                vectorPlayerStateWrite(&players);
-                printf("i:%d,j:%d  ", i, j);
+                //vectorPlayerStateWrite(&players);
+                //printf("i:%d,j:%d  ", i, j);
                 sendDataPlayerFromAToB(&players.arr[j],&players.arr[i]);
                 //}
 
