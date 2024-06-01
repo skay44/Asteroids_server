@@ -33,7 +33,7 @@ typedef struct _projectile {
 //ramka asteroid i graczy
 #pragma pack(push,1)
 typedef struct _sendFrameEntity {
-    unsigned char header;     //kod okreslajacy co to za rodzaj ramki (0b1000001 - gracz, 0b10000010 - asteroida)
+    unsigned char header;     //kod okreslajacy co to za rodzaj ramki (0b1000001 - gracz, 0b10000010 - pocisk)
     short ID;
     float posX;
     float posY;

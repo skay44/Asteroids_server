@@ -43,8 +43,8 @@ void* handleOutput()
         //TODO
         //boje sie ciaglego zablokowania mutexa przez wysylanie
         //musze jeszcze przemyslec jak to naprawic
-        pthread_mutex_lock(&projectileVectorLock);
-        pthread_mutex_lock(&playerVectorLock);
+        //pthread_mutex_lock(&projectileVectorLock);
+        //pthread_mutex_lock(&playerVectorLock);
         //pobieranie ilosci graczy
         int numberOfplayers = players.size;
         int numberOfprojectile = projectiles.size;
@@ -57,21 +57,23 @@ void* handleOutput()
                 //po pobraniu dwoch graczy graczowi i wyslij informacje o graczu j
                 //zeby to zrobic musisz pobrac dane o graczu j i connection number z gracza i
                 //wyslij
-                if(players.arr[j].playerID != players.arr[i].playerID){
-                    sendDataPlayerFromAToB(&players.arr[j],&players.arr[i]);
-                }
+                //if(players.arr[j].playerID != players.arr[i].playerID){
+                vectorPlayerStateWrite(&players);
+                printf("i:%d,j:%d  ", i, j);
+                sendDataPlayerFromAToB(&players.arr[j],&players.arr[i]);
+                //}
 
             }
 
             for(int k=0;k<numberOfprojectile;k++)
             {
-                sendDataProjectileAToPlayerB(&projectiles.arr[k],&players.arr[i]);
+                sendDataProjectileAToPlayerB(&projectiles.arr[k], &players.arr[i]);
             }
         }
         //TODO: DO USUNIECIA
         //test();
-        pthread_mutex_unlock(&projectileVectorLock);
-        pthread_mutex_unlock(&playerVectorLock);
+        //pthread_mutex_unlock(&projectileVectorLock);
+        //pthread_mutex_unlock(&playerVectorLock);
 
         //odczekaj x milisekund zanim znow cos wyslesz
         //pomaga to zapobiec obciazeniu watku klienta

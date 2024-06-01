@@ -66,6 +66,7 @@ int main() {
     GLP glp;
     glp.players = &players;
     glp.projectiles = &projectiles;
+    projectileID = 0;
 
     pthread_create(&mainGamepley, NULL, gameplayLoop, &glp);
 

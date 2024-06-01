@@ -17,6 +17,7 @@ pthread_mutex_t projectileVectorLock;
 
 vectorPlayerState players;
 vectorProjectile projectiles;
+int projectileID;
 
 //dodawanie do wektora graczy
 void addToPlayerVector(playerState toAdd){

@@ -42,6 +42,7 @@ void* handleInput(void* x){
     int bytes_recieved = 0;
     char readBuffer[sizeof(Frame)];
     playerState ps;
+    projectile pr;
     while(true){
         //read(connection,readBuffer,512);
         while(bytes_recieved < sizeof(Frame)){
@@ -67,6 +68,16 @@ void* handleInput(void* x){
             }
             else{
                 updatePlayerVector(ps);
+            }
+            if(ps.ifShoot == true){
+                pr.posX = f.XPositionShot;
+                pr.posY = f.YPositionShot;
+                pr.speedX = f.XVelocityShot;
+                pr.speedY = f.YVelocityShot;
+                pr.rotation = f.angle;
+                pr.projectileID = projectileID;
+                projectileID++;
+                addToProjectileVector(pr);
             }
         }
         else{
