@@ -48,7 +48,26 @@ void* gameplayLoop(void* params){
                 projectiles.arr[i].posY = 0;
             }
         }
-        pthread_mutex_unlock(&projectileVectorLock);
+        pthread_mutex_unlock(&projectileVectorLock); //75 width
+
+        pthread_mutex_lock(&asteroidVectorLock);
+        for(int i = 0; i < asteroids.size; i++){
+            asteroids.arr[i].posX += asteroids.arr[i].speedX * deltaTime / 1000;
+            asteroids.arr[i].posY += asteroids.arr[i].speedY * deltaTime / 1000;
+            if (asteroids.arr[i].posX < 0) {
+                asteroids.arr[i].posX = 1920;
+            }
+            else if (asteroids.arr[i].posX > 1920) {
+                asteroids.arr[i].posX = 0;
+            }
+            if (asteroids.arr[i].posY < 0) {
+                asteroids.arr[i].posY = 1080;
+            }
+            else if (asteroids.arr[i].posY > 1080) {
+                asteroids.arr[i].posY = 0;
+            }
+        }
+        pthread_mutex_unlock(&asteroidVectorLock);
 
         if(timePassed > 5){
             asteroid a;
