@@ -16,23 +16,6 @@
 #ifndef SERVER_PLAYERCONNECTION_H
 #define SERVER_PLAYERCONNECTION_H
 
-#pragma pack(push,1)
-typedef struct{
-    unsigned char ID;
-    unsigned char Shot:1;
-    char KeyboardKeys;
-    float XPosition;
-    float YPosition;
-    float XVelocity;
-    float YVelocity;
-    float angle;
-    float XPositionShot;
-    float YPositionShot;
-    float XVelocityShot;
-    float YVelocityShot;
-} Frame;
-#pragma pack(pop)
-
 void debugFrame(Frame* f){
     printf("{ id: %d ",f->ID);
     printf("shoot: %d ",f->Shot);
@@ -69,7 +52,6 @@ void* handleInput(void* x){
             f = *((Frame*)&readBuffer);
             printf("Player %d, connection %d: ", playerNum,connection);
             debugFrame(&f);
-
 
             ps.connectionAddr = connection;
             ps.posX = f.XPosition;

@@ -11,7 +11,7 @@
 #include "gameState.h"
 #include "playerConnection.h"
 #include "data.h"
-#include "serverSend.h"
+#include "serverOutput.h"
 
 
 int main() {
@@ -70,7 +70,7 @@ int main() {
     pthread_create(&mainGamepley, NULL, gameplayLoop, &glp);
 
     pthread_t sendThread;
-    pthread_create(&sendThread,NULL,handleSend,NULL);
+    pthread_create(&sendThread, NULL, handleOutput, NULL);
 
     while(true){
         struct sockaddr_in bingus;
@@ -85,8 +85,8 @@ int main() {
         pthread_t thread_id;
         pthread_t thread_id2;
         if(
-                pthread_create(&thread_id, NULL, handleInput, newGLP) != 0 &&
-                pthread_create(&thread_id2, NULL, handleOutput, newGLP) != 0
+                pthread_create(&thread_id, NULL, handleInput, newGLP) != 0 //&&
+                //pthread_create(&thread_id2, NULL, handleOutput, newGLP) != 0
         )
         {
             printf("Error with connection\n");

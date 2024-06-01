@@ -12,7 +12,7 @@ add_executable(Server
         vector.c
         gameState.h
         gameEntities.h
-        serverSend.h
+        serverOutput.h
         data.h
 )
 

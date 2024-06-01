@@ -1,7 +1,7 @@
 
 
-#ifndef SERVER_SERVERSEND_H
-#define SERVER_SERVERSEND_H
+#ifndef SERVER_SERVEROUTPUT_H
+#define SERVER_SERVEROUTPUT_H
 
 #include <winsock2.h>
 #include <synchapi.h>
@@ -36,15 +36,13 @@ void test()
     send(sendTo,(char*)&sfsi,sizeof(sendFrameSerwerInfo ),0);
 }
 
-void* handleSend()
+void* handleOutput()
 {
     while(1)
     {
-
         //TODO
         //boje sie ciaglego zablokowania mutexa przez wysylanie
         //musze jeszcze przemyslec jak to naprawic
-
         pthread_mutex_lock(&projectileVectorLock);
         pthread_mutex_lock(&playerVectorLock);
         //pobieranie ilosci graczy
@@ -67,21 +65,16 @@ void* handleSend()
                 sendDataProjectileAToPlayerB(&projectiles.arr[k],&players.arr[i]);
             }
         }
-
         //TODO: DO USUNIECIA
-        test();
+        //test();
         pthread_mutex_unlock(&projectileVectorLock);
         pthread_mutex_unlock(&playerVectorLock);
-
 
         //odczekaj x milisekund zanim znow cos wyslesz
         //pomaga to zapobiec obciazeniu watku klienta
         Sleep(1000);
-
-
-
     }
 }
 
 
-#endif //SERVER_SERVERSEND_H
+#endif //SERVER_SERVEROUTPUT_H

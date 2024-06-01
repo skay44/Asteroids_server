@@ -7,27 +7,8 @@
 #include <pthread.h>
 #include "gameEntities.h"
 
-
-#pragma pack(push,1)
-typedef struct{
-    unsigned char ID;
-    unsigned char Shot:1;
-    unsigned char KeyboardKey;
-    float XPosition;
-    float YPosition;
-    float XVelocity;
-    float YVelocity;
-    float Angel;
-    float XPositionShot;
-    float YPositionShot;
-    float XVelocityShot;
-    float YVelocityShot;
-} Frame;
-#pragma pack(pop)
-
 //tutaj jest problem
-void sendFrameToSocket(SOCKET sockfd, Frame frame)
-{
+void sendFrameToSocket(SOCKET sockfd, Frame frame){
     int result = send(sockfd, (char*)&frame, sizeof(Frame), 0);
     if (result == SOCKET_ERROR) {
         printf("Send failed: %d\n", WSAGetLastError());
@@ -39,8 +20,7 @@ void sendFrameToSocket(SOCKET sockfd, Frame frame)
 
 //1 TODO: TO JEST PRZYKLADOWY KLIENT DLATEGO WSZYSTKO MOZE BYC W JEDNYM PLIKU WALIC KONSEKWENCJE XD
 //2 TODO: PRZETESTOWAC JAKOS ASTEROIDY
-void* handleInput(void* data)
-{
+void* handleInput(void* data){
     int* x = (int*)data;
     SOCKET sockfd = x[0];
     free(x);
@@ -60,8 +40,7 @@ void* handleInput(void* data)
         total_bytes_received+=bytes_received;
         unsigned char header = readBuffer[0];   //pobieranie headera
 
-        if(header==PLAYER_CODE || header==PROJECTILE_CODE)  //ramka gracza i asteroid
-        {
+        if(header==PLAYER_CODE || header==PROJECTILE_CODE) { //ramka gracza i asteroid
             // Loop to ensure we receive the complete frame
             while (total_bytes_received < sizeof(sendFrameEntity)) {
                 bytes_received = recv(sockfd, readBuffer + total_bytes_received, sizeof(sendFrameEntity) - total_bytes_received, 0);
@@ -75,18 +54,15 @@ void* handleInput(void* data)
             }
             // Now we have a complete frame in readBuffer
             sendFrameEntity* f = (sendFrameEntity*)readBuffer;
-            if(f->header==PLAYER_CODE)
-            {
+            if(f->header==PLAYER_CODE){
                 printf("Get data from server. Player data: %d\n", f->ID);
             }
-            else
-            {
+            else{
                 printf("Get data from server. Asteroid data: %d\n", f->ID);
             }
 
         }
-        else    //inna ramka niz gracz i asteroida
-        {
+        else{//inna ramka niz gracz i asteroida
             while (total_bytes_received < sizeof(sendFrameSerwerInfo)) {
                 bytes_received = recv(sockfd, readBuffer + total_bytes_received, sizeof(sendFrameSerwerInfo) - total_bytes_received, 0);
                 if (bytes_received <= 0) {
@@ -106,23 +82,20 @@ void* handleInput(void* data)
     return NULL;
 }
 
-int main()
-{
+int main(){
     WSADATA wsadata;
     SOCKET sockfd;
     struct sockaddr_in serverAddr;
     int result;
 
     result = WSAStartup(MAKEWORD(2,2),&wsadata);
-    if(result!=0)
-    {
+    if(result!=0){
         printf("WSAStartup failed %d\n",result);
         return 1;
     }
 
     sockfd = socket(AF_INET, SOCK_STREAM,0);
-    if(sockfd == INVALID_SOCKET)
-    {
+    if(sockfd == INVALID_SOCKET){
         printf("Socket create failed %d\n",WSAGetLastError());
         return 1;
     }
@@ -131,18 +104,16 @@ int main()
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(2278);
     gethostname(hostname,sizeof(hostname)-1);
-    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.1.104");
+    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.1.101");
 
     result = connect(sockfd, (struct sockaddr*)& serverAddr, sizeof(serverAddr));
-    if(result == SOCKET_ERROR)
-    {
+    if(result == SOCKET_ERROR){
         printf("Error with connection %d\n",WSAGetLastError());
         closesocket(sockfd);
         WSACleanup();
         return 1;
     }
-    else
-    {
+    else{
         printf("Connected with server\n");
     }
 
@@ -157,21 +128,16 @@ int main()
     pthread_create(&inputThread,NULL,handleInput,paramData);
     char charToSend='a';
 
-    while(1)
-    {
-
-        if(_kbhit())
-        {
+    while(1){
+        if(_kbhit()){
             char key = _getch();
-            if(key=='q'||key=='Q')
-            {
+            if(key=='q'||key=='Q'){
                 break;
             }
-            else if(key=='s'||key=='S')
-            {
+            else if(key=='s'||key=='S'){
                 printf("przed wyslaniem: %c\n",charToSend);
                 Frame frame = {1, 1, charToSend, 10.5f, 20.5f, 1.5f, 2.5f, 45.0f, 15.5f, 25.5f, 3.5f, 4.5f};
-                printf("%c\n",frame.KeyboardKey);
+                printf("%c\n",frame.KeyboardKeys);
                 // Send data to server
                 sendFrameToSocket(sockfd,frame);
                 /*result = send(sockfd, (char*)&frame, sizeof(frame), 0);
@@ -182,16 +148,11 @@ int main()
                     exit(1);
                 }*/
             }
-            else if(key>='a'&&key<='z')
-            {
+            else if(key>='a'&&key<='z'){
                 charToSend=key;
                 printf("%c\n",charToSend);
             }
-
-
-
         }
-
     }
     closesocket(sockfd);
     WSACleanup();

@@ -51,5 +51,22 @@ typedef struct _sendFrameSerwerInfo {
 } sendFrameSerwerInfo;
 #pragma pack(pop)
 
+//ramka odbierajaca informacje od serwera
+#pragma pack(push,1)
+typedef struct{
+    unsigned char ID;
+    unsigned char Shot:1;
+    char KeyboardKeys;
+    float XPosition;
+    float YPosition;
+    float XVelocity;
+    float YVelocity;
+    float angle;
+    float XPositionShot;
+    float YPositionShot;
+    float XVelocityShot;
+    float YVelocityShot;
+} Frame;
+#pragma pack(pop)
 
 #endif //SERVER_GAMEENTITIES_H
