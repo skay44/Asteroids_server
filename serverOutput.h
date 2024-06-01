@@ -57,7 +57,10 @@ void* handleOutput()
                 //po pobraniu dwoch graczy graczowi i wyslij informacje o graczu j
                 //zeby to zrobic musisz pobrac dane o graczu j i connection number z gracza i
                 //wyslij
-                sendDataPlayerFromAToB(&players.arr[j],&players.arr[i]);
+                if(players.arr[j].playerID != players.arr[i].playerID){
+                    sendDataPlayerFromAToB(&players.arr[j],&players.arr[i]);
+                }
+
             }
 
             for(int k=0;k<numberOfprojectile;k++)
