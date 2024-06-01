@@ -31,7 +31,7 @@ void sendProjectileData(projectile* a, playerState* b)
 void sendAsteroidData(asteroid * a, playerState* b){
     int sendTo = b->connectionAddr;
     //tworzenie ramki do przeslania (ramka asteroid)
-    asteroidFrame psf = {PROJECTILE_CODE, a->asteroidID, a->posX, a->posY, a->speedX, a->speedY, a->rotation, a->size};
+    asteroidFrame psf = {ASTEROID_CODE, a->asteroidID, a->posX, a->posY, a->speedX, a->speedY, a->rotation, a->size};
     send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
 }
 
