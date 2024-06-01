@@ -222,23 +222,20 @@ void vectorProjectilePop(vectorProjectile* a){
 
 void vectorProjectileRemove(vectorProjectile* a,projectile toRemove){
     int iterator = 0;
+    int removed = 0;
     while(iterator < a->size){
-        if(
-            toRemove.projectileID == a->arr[iterator].projectileID &&
-            toRemove.posX == a->arr[iterator].posX &&
-            toRemove.posY == a->arr[iterator].posY &&
-            toRemove.speedX == a->arr[iterator].speedX &&
-            toRemove.speedY == a->arr[iterator].speedY
-        ){
+        if(toRemove.projectileID == a->arr[iterator].projectileID){
+            a->size--;
+            removed = 1;
             break;
         }
         iterator++;
     }
-    while(iterator < a->size-1){
+    if (removed == 0) return;
+    while(iterator < a->size){
         a->arr[iterator] = a->arr[iterator+1];
         iterator++;
     }
-    a->size--;
 }
 
 void vectorProjectileRemoveAt(vectorProjectile* a,int toRemove){

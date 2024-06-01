@@ -19,6 +19,7 @@ void* gameplayLoop(void* params){
     vectorPlayerStateCreate(&players);
     vectorProjectileCreate(&projectiles);
     vectorAsteroidCreate(&asteroids);
+    vectorIntCreate(&idsOfAsteroidsToDelete);
 
     QueryPerformanceFrequency(&frequency);
 
@@ -36,10 +37,10 @@ void* gameplayLoop(void* params){
             projectiles.arr[i].lifetime -= deltaTime / 1000;
 
             if(projectiles.arr[i].lifetime <= 0){
-                vectorProjectileRemove(&projectiles,projectiles.arr[i]);
                 pthread_mutex_lock(&idsOfProjectilesToDeleteLock);
                 vectorIntPush(&idsOfAsteroidsToDelete,projectiles.arr[i].projectileID);
                 pthread_mutex_unlock(&idsOfProjectilesToDeleteLock);
+                vectorProjectileRemove(&projectiles,projectiles.arr[i]);
                 i--;
             }
 
