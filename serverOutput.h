@@ -32,7 +32,7 @@ void sendAsteroidData(asteroid * a, playerState* b){
     int sendTo = b->connectionAddr;
     //tworzenie ramki do przeslania (ramka asteroid)
     asteroidFrame psf = {ASTEROID_CODE, a->asteroidID, a->posX, a->posY, a->speedX, a->speedY, a->rotation, a->size};
-    send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
+    send(sendTo, (char*)&psf, sizeof(asteroidFrame), 0);
 }
 
 //TODO: TEST
