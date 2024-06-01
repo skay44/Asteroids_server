@@ -71,16 +71,18 @@ void* gameplayLoop(void* params){
 
         if(timePassed > 5){
             asteroid a;
+            a.asteroidID = asteroidID;
             a.size = 3;
             a.posY = 200;
             a.posX = 200;
             a.rotation = 20;
-            a.speedX = 15;
-            a.speedY = 17;
+            a.speedX = 45;
+            a.speedY = 65;
             timePassed-=10;
             addToAsteroidVector(a);
             timePassed -= 10;
             printf("added asteroid\n");
+            asteroidID++;
         }
 
         //vectorPlayerStateWrite(&players);

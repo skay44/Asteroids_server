@@ -20,6 +20,7 @@ vectorPlayerState players;
 vectorProjectile projectiles;
 vectorAsteroid asteroids;
 int projectileID;
+int asteroidID;
 
 //dodawanie do wektora graczy
 void addToPlayerVector(playerState toAdd){

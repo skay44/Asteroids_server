@@ -84,14 +84,6 @@ typedef struct _deletus {
 } deletus;
 #pragma pack(pop)
 
-//przykladowa ramka zawierajaca informacje serwera do klientow
-#pragma pack(push,1)
-typedef struct _sendFrameSerwerInfo {
-    unsigned char header;     //kod okreslajacy co to za rodzaj ramki (inne niz 0b1000001 oraz 0b10000010)
-    unsigned char code;
-} sendFrameSerwerInfo;
-#pragma pack(pop)
-
 //ramka odbierajaca informacje od serwera
 #pragma pack(push,1)
 typedef struct{
