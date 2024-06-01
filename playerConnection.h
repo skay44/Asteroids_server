@@ -76,6 +76,7 @@ void* handleInput(void* x){
                 pr.speedY = f.YVelocityShot;
                 pr.rotation = f.angle;
                 pr.projectileID = projectileID;
+                pr.lifetime = 5;
                 projectileID++;
                 addToProjectileVector(pr);
             }

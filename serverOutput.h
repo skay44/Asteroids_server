@@ -35,6 +35,16 @@ void sendAsteroidData(asteroid * a, playerState* b){
     send(sendTo, (char*)&psf, sizeof(asteroidFrame), 0);
 }
 
+void sendDeleteData(vectorInt* a, playerState* b){
+    int sendTo = b->connectionAddr;
+    //tworzenie ramki do przeslania (ramka asteroid)
+    for(int i = 0; i < a->size; i++){
+        deletus psf = {DELETUS_CODE, 2, a->arr[i]};
+        send(sendTo, (char*)&psf, sizeof(deletus), 0);
+    }
+}
+
+
 //TODO: TEST
 void test()
 {
@@ -54,17 +64,32 @@ void* handleOutput(){
         //pthread_mutex_lock(&playerVectorLock);
         //pobieranie ilosci graczy
         int numberOfplayers = players.size;
-        int numberOfprojectile = projectiles.size;
         int numberOfAsteroids = asteroids.size;
+
+
+        pthread_mutex_lock(&idsOfProjectilesToDeleteLock);
+        for(int i=0;i<numberOfplayers;i++) {
+            sendDeleteData(&idsOfAsteroidsToDelete, &players.arr[i]);
+        }
+        vectorIntClear(&idsOfAsteroidsToDelete);
+        pthread_mutex_unlock(&idsOfProjectilesToDeleteLock);
+
+
         for(int i=0;i<numberOfplayers;i++){
             //wysylanie do gracza info o innych graczach
             for(int j=0;j<numberOfplayers;j++){
                 if(players.arr[j].playerID != players.arr[i].playerID) sendPlayerData(&players.arr[j], &players.arr[i]);
             }
             //wysylanie pociskow
+
+            //TODO zmuteksowac
+            pthread_mutex_lock(&projectileVectorLock);
+            int numberOfprojectile = projectiles.size;
             for(int k=0;k<numberOfprojectile;k++){
                 sendProjectileData(&projectiles.arr[k], &players.arr[i]);
             }
+            pthread_mutex_unlock(&projectileVectorLock);
+
             for(int l = 0; l < numberOfAsteroids; l++){
                 sendAsteroidData(&asteroids.arr[l], &players.arr[i]);
             }

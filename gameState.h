@@ -33,20 +33,33 @@ void* gameplayLoop(void* params){
 
         pthread_mutex_lock(&projectileVectorLock);
         for(int i =0; i < projectiles.size; i++){
-            projectiles.arr[i].posX += projectiles.arr[i].speedX * deltaTime / 1000;
-            projectiles.arr[i].posY += projectiles.arr[i].speedY * deltaTime / 1000;
-            if (projectiles.arr[i].posX < 0) {
-                projectiles.arr[i].posX = 1920;
+            projectiles.arr[i].lifetime -= deltaTime / 1000;
+
+            if(projectiles.arr[i].lifetime <= 0){
+                vectorProjectileRemove(&projectiles,projectiles.arr[i]);
+                pthread_mutex_lock(&idsOfProjectilesToDeleteLock);
+                vectorIntPush(&idsOfAsteroidsToDelete,projectiles.arr[i].projectileID);
+                pthread_mutex_unlock(&idsOfProjectilesToDeleteLock);
+                i--;
             }
-            else if (projectiles.arr[i].posX > 1920) {
-                projectiles.arr[i].posX = 0;
+
+            else{
+                projectiles.arr[i].posX += projectiles.arr[i].speedX * deltaTime / 1000;
+                projectiles.arr[i].posY += projectiles.arr[i].speedY * deltaTime / 1000;
+                if (projectiles.arr[i].posX < 0) {
+                    projectiles.arr[i].posX = 1920;
+                }
+                else if (projectiles.arr[i].posX > 1920) {
+                    projectiles.arr[i].posX = 0;
+                }
+                if (projectiles.arr[i].posY < 0) {
+                    projectiles.arr[i].posY = 1080;
+                }
+                else if (projectiles.arr[i].posY > 1080) {
+                    projectiles.arr[i].posY = 0;
+                }
             }
-            if (projectiles.arr[i].posY < 0) {
-                projectiles.arr[i].posY = 1080;
-            }
-            else if (projectiles.arr[i].posY > 1080) {
-                projectiles.arr[i].posY = 0;
-            }
+
         }
         pthread_mutex_unlock(&projectileVectorLock); //75 width
 
@@ -85,7 +98,7 @@ void* gameplayLoop(void* params){
             asteroidID++;
         }
 
-        //vectorPlayerStateWrite(&players);
+        vectorProjectileWrite(&projectiles);
         t1 = t2;
         Sleep(1);
     }
