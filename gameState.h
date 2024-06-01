@@ -10,7 +10,6 @@
 #include "data.h"
 
 
-
 void* gameplayLoop(void* params){
     GLP* a = (GLP*) params;
     vectorPlayerStateCreate(&players);      //informacje o graczach (vector graczy)
@@ -18,6 +17,14 @@ void* gameplayLoop(void* params){
 
 
     while(1){
+        char key = _getch();
+        //TODO: Testowanie pozniej mozna usunac
+        //TESTY JEDNOSTKOWE BY SIE PRZYDALY XD
+
+        _getch();
+        printf("%d: ", players.size);
+        vectorPlayerStateWrite(&players);
+
 
 
     }

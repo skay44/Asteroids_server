@@ -58,6 +58,7 @@ void* handleThread(void* x){
     Frame f;
     int bytes_recieved = 0;
     char readBuffer[sizeof(Frame)];
+    playerState ps;
     while(true){
         //read(connection,readBuffer,512);
         while(bytes_recieved < sizeof(Frame)){
@@ -69,7 +70,7 @@ void* handleThread(void* x){
             printf("Player %d, connection %d: ", playerNum,connection);
             debugFrame(&f);
 
-            playerState ps;
+
             ps.connectionAddr = connection;
             ps.posX = f.XPosition;
             ps.posY = f.YPosition;
@@ -87,6 +88,9 @@ void* handleThread(void* x){
         }
         else{
             printf("Connection lost with player: %d\n", playerNum);
+            if(findInPlayerVector(playerNum)){
+                removeFromPLayerVector(ps);
+            }
             break;
         }
         bytes_recieved = 0;

@@ -19,18 +19,27 @@ pthread_mutex_t projectileVectorLock;
 vectorPlayerState players;
 vectorProjectile projectiles;
 
+//dodawanie do wektora graczy
 void addToPlayerVector(playerState toAdd){
     pthread_mutex_lock(&playerVectorLock);
     vectorPlayerStatePush(&players,toAdd);
     pthread_mutex_unlock(&playerVectorLock);
 }
 
+//dodawanie do wektora asteroid
 void addToProjectileVector(projectile toAdd){
     pthread_mutex_lock(&projectileVectorLock);
     vectorProjectilePush(&projectiles,toAdd);
     pthread_mutex_unlock(&projectileVectorLock);
 }
 
+//usuwanie z wektora graczy
+void removeFromPLayerVector(playerState toRemove)
+{
+    pthread_mutex_lock(&playerVectorLock);
+    vectorPlayerStateRemove(&players,toRemove);
+    pthread_mutex_unlock(&playerVectorLock);
+}
 //TODO usunac
 bool findInPlayerVector(int check){
     pthread_mutex_lock(&playerVectorLock);

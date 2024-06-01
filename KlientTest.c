@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include "gameEntities.h"
 
+
 #pragma pack(push,1)
 typedef struct{
     unsigned char ID;
@@ -25,7 +26,7 @@ typedef struct{
 #pragma pack(pop)
 
 //tutaj jest problem
-void sendFrame(SOCKET sockfd, Frame frame)
+void sendFrameToSocket(SOCKET sockfd, Frame frame)
 {
     int result = send(sockfd, (char*)&frame, sizeof(Frame), 0);
     if (result == SOCKET_ERROR) {
@@ -36,26 +37,71 @@ void sendFrame(SOCKET sockfd, Frame frame)
     }
 }
 
+//1 TODO: TO JEST PRZYKLADOWY KLIENT DLATEGO WSZYSTKO MOZE BYC W JEDNYM PLIKU WALIC KONSEKWENCJE XD
+//2 TODO: PRZETESTOWAC JAKOS ASTEROIDY
 void* handleInput(void* data)
 {
-    SOCKET sockfd = (SOCKET)data;
-    playerSendFrame frame;
-    int bytes_recieved = 0;
-    char readBuffer[sizeof(playerSendFrame )];
+    int* x = (int*)data;
+    SOCKET sockfd = x[0];
+    free(x);
+    printf("In: %lld",sockfd);
+    int bytes_received = 0;
+    char readBuffer[sizeof(sendFrameEntity )];  //maksymalny rozmiar buffora wynosi rozmiar najwiekszej ramki
+    int total_bytes_received = 0;
     while(1) {
-        //read(connection,readBuffer,512);
-        while (bytes_recieved < sizeof(playerSendFrame)) {
-            bytes_recieved += recv(sockfd, readBuffer + bytes_recieved, sizeof(playerSendFrame), 0);
-            if (bytes_recieved == 0) break;
+        total_bytes_received = 0;
+        bytes_received = recv(sockfd, readBuffer, 1, 0);    //wczytywanie 1 bajtu do odczytania headera
+        if (bytes_received <= 0) {
+            // handle errors or connection closed
+            perror("recv failed");
+            close(sockfd);
+            return NULL;
         }
-        if(bytes_recieved > 0) {
-            playerSendFrame f = *((playerSendFrame*)&readBuffer);
-            printf("Get data from server\n");
-            printf("Data: %d",f.playerID);
+        total_bytes_received+=bytes_received;
+        unsigned char header = readBuffer[0];   //pobieranie headera
+
+        if(header==PLAYER_CODE || header==PROJECTILE_CODE)  //ramka gracza i asteroid
+        {
+            // Loop to ensure we receive the complete frame
+            while (total_bytes_received < sizeof(sendFrameEntity)) {
+                bytes_received = recv(sockfd, readBuffer + total_bytes_received, sizeof(sendFrameEntity) - total_bytes_received, 0);
+                if (bytes_received <= 0) {
+                    // handle errors or connection closed
+                    perror("recv failed");
+                    close(sockfd);
+                    return NULL;
+                }
+                total_bytes_received += bytes_received;
+            }
+            // Now we have a complete frame in readBuffer
+            sendFrameEntity* f = (sendFrameEntity*)readBuffer;
+            if(f->header==PLAYER_CODE)
+            {
+                printf("Get data from server. Player data: %d\n", f->ID);
+            }
+            else
+            {
+                printf("Get data from server. Asteroid data: %d\n", f->ID);
+            }
+
         }
-        bytes_recieved = 0;
-        for(int i = 0; i < 512;i++)
-            readBuffer[0] = '\0';
+        else    //inna ramka niz gracz i asteroida
+        {
+            while (total_bytes_received < sizeof(sendFrameSerwerInfo)) {
+                bytes_received = recv(sockfd, readBuffer + total_bytes_received, sizeof(sendFrameSerwerInfo) - total_bytes_received, 0);
+                if (bytes_received <= 0) {
+                    // handle errors or connection closed
+                    perror("recv failed");
+                    close(sockfd);
+                    return NULL;
+                }
+                total_bytes_received += bytes_received;
+            }
+            printf("Unknown frame. Header: %d\n",header);
+        }
+
+        // Reset for next frame
+        memset(readBuffer, 0, sizeof(readBuffer));
     }
     return NULL;
 }
@@ -101,7 +147,14 @@ int main()
     }
 
     pthread_t inputThread;
-    pthread_create(&inputThread,NULL,handleInput,&sockfd);
+    printf("Out: %lld",sockfd);
+    int* paramData = malloc(sizeof(int));
+    if (!paramData) {
+        printf("Memory allocation failed\n");
+        closesocket(sockfd);
+    }
+    *paramData = sockfd;
+    pthread_create(&inputThread,NULL,handleInput,paramData);
     char charToSend='a';
 
     while(1)
@@ -120,7 +173,7 @@ int main()
                 Frame frame = {1, 1, charToSend, 10.5f, 20.5f, 1.5f, 2.5f, 45.0f, 15.5f, 25.5f, 3.5f, 4.5f};
                 printf("%c\n",frame.KeyboardKey);
                 // Send data to server
-                sendFrame(sockfd,frame);
+                sendFrameToSocket(sockfd,frame);
                 /*result = send(sockfd, (char*)&frame, sizeof(frame), 0);
                 if (result == SOCKET_ERROR) {
                     printf("Send failed: %d\n", WSAGetLastError());

@@ -14,54 +14,72 @@ void sendDataPlayerFromAToB(playerState* a, playerState* b)
 {
     int sendTo = b->connectionAddr;
     //tworzenie ramki do przeslania (ramka gracz)
-    playerSendFrame psf = {a->playerID,a->posX,a->posY,a->speedX,a->speedY,a->rotation};
-    int result = send(sendTo,(char*)&psf,sizeof(playerSendFrame),0);
-    /*if(result>0)
-    {
-        printf("From %d to %d: OK\n",a->playerID,b->playerID);
-    }
-    else
-    {
-        printf("From %d to %d: ERROR\n",a->playerID,b->playerID);
-    }*/
-
+    sendFrameEntity psf = {PLAYER_CODE,a->playerID,a->posX,a->posY,a->speedX,a->speedY,a->rotation};
+    send(sendTo,(char*)&psf,sizeof(sendFrameEntity),0);
 }
 
+void sendDataProjectileAToPlayerB(projectile* a, playerState* b)
+{
+    int sendTo = b->connectionAddr;
+    //tworzenie ramki do przeslania (ramka asteroid)
+    sendFrameEntity psf = {PROJECTILE_CODE,a->projectileID,a->posX,a->posY,a->speedX,a->speedY,a->rotation};
+    send(sendTo,(char*)&psf,sizeof(sendFrameEntity),0);
+}
+
+//TODO: TEST
+void test()
+{
+    int sendTo = players.arr[0].connectionAddr;
+    sendFrameEntity psf = {PROJECTILE_CODE,123,1,2,3,4,5};
+    send(sendTo,(char*)&psf,sizeof(sendFrameEntity),0);
+    sendFrameSerwerInfo sfsi = {0b11110011,45};
+    send(sendTo,(char*)&sfsi,sizeof(sendFrameSerwerInfo ),0);
+}
 
 void* handleSend()
 {
-    //pobieranie ilosci asteroid
-    pthread_mutex_lock(&projectileVectorLock);
-    int numberOfprojectile = projectiles.size;
-    pthread_mutex_unlock(&projectileVectorLock);
-    printf("In handleSend\n");
     while(1)
     {
+
+        //TODO
+        //boje sie ciaglego zablokowania mutexa przez wysylanie
+        //musze jeszcze przemyslec jak to naprawic
+
+        pthread_mutex_lock(&projectileVectorLock);
         pthread_mutex_lock(&playerVectorLock);
         //pobieranie ilosci graczy
         int numberOfplayers = players.size;
+        int numberOfprojectile = projectiles.size;
         for(int i=0;i<numberOfplayers;i++)
         {
+            //wysylanie do gracza info o innych graczach
             for(int j=0;j<numberOfplayers;j++)
             {
                 //petla pobierajaca gracza i i j z vectora
                 //po pobraniu dwoch graczy graczowi i wyslij informacje o graczu j
                 //zeby to zrobic musisz pobrac dane o graczu j i connection number z gracza i
                 //wyslij
-                sendDataPlayerFromAToB(&players.arr[i],&players.arr[j]);
+                sendDataPlayerFromAToB(&players.arr[j],&players.arr[i]);
             }
 
+            for(int k=0;k<numberOfprojectile;k++)
+            {
+                sendDataProjectileAToPlayerB(&projectiles.arr[k],&players.arr[i]);
+            }
         }
+
+        //TODO: DO USUNIECIA
+        test();
+        pthread_mutex_unlock(&projectileVectorLock);
         pthread_mutex_unlock(&playerVectorLock);
 
 
         //odczekaj x milisekund zanim znow cos wyslesz
         //pomaga to zapobiec obciazeniu watku klienta
-        Sleep(10);
+        Sleep(1000);
 
-        pthread_mutex_lock(&projectileVectorLock);
-        numberOfprojectile = projectiles.size;
-        pthread_mutex_unlock(&projectileVectorLock);
+
+
     }
 }
 
