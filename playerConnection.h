@@ -51,8 +51,8 @@ void* handleInput(void* x){
         }
         if(bytes_recieved > 0){
             f = *((Frame*)&readBuffer);
-            printf("Player %d, connection %d: ", playerNum,connection);
-            debugFrame(&f);
+            //printf("Player %d, connection %d: ", playerNum,connection);
+            //debugFrame(&f);
 
             ps.connectionAddr = connection;
             ps.posX = f.XPosition;
