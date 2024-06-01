@@ -39,7 +39,7 @@ void sendAsteroidData(asteroid * a, playerState* b){
 void test()
 {
     int sendTo = players.arr[0].connectionAddr;
-    entityFrame psf = {PROJECTILE_CODE, 123, 1, 2, 3, 4, 5};
+    entityFrame psf = {ASTEROID_CODE, 123, 1, 2, 3, 4, 5};
     send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
     sendFrameSerwerInfo sfsi = {0b11110011,45};
     send(sendTo,(char*)&sfsi,sizeof(sendFrameSerwerInfo ),0);
