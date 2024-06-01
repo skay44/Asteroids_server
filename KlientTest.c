@@ -55,7 +55,7 @@ void* handleInput(void* data){
             // Now we have a complete frame in readBuffer
             sendFrameEntity* f = (sendFrameEntity*)readBuffer;
             if(f->header==PLAYER_CODE){
-                printf("Get data from server. Player data: %d\n", f->ID);
+                printf("Get data from server. Player data: %d %f %f\n", f->ID, f->posY, f->posX);
             }
             else{
                 printf("Get data from server. Asteroid data: %d\n", f->ID);

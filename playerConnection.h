@@ -66,6 +66,7 @@ void* handleInput(void* x){
                 addToPlayerVector(ps);
             }
             else{
+                updatePlayerVector(ps);
             }
         }
         else{

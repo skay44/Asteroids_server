@@ -65,4 +65,22 @@ bool findInProjectileVector(int check){
     return false;
 }
 
+bool updatePlayerVector(playerState toUpdate){
+    pthread_mutex_lock(&projectileVectorLock);
+    for(int i = 0; i < players.size; i++){
+        if(players.arr[i].playerID == toUpdate.playerID){
+            players.arr[i].posX = toUpdate.posX;
+            players.arr[i].posY = toUpdate.posY;
+            players.arr[i].speedX = toUpdate.speedX;
+            players.arr[i].speedY = toUpdate.speedY;
+            players.arr[i].rotation = toUpdate.rotation;
+
+            pthread_mutex_unlock(&projectileVectorLock);
+            return true;
+        }
+    }
+    pthread_mutex_unlock(&projectileVectorLock);
+    return false;
+}
+
 #endif //SERVER_DATA_H
