@@ -5,8 +5,9 @@
 #ifndef SERVER_GAMEENTITIES_H
 #define SERVER_GAMEENTITIES_H
 
-#define PLAYER_CODE 0b10000001
+#define PLAYER_CODE     0b10000001
 #define PROJECTILE_CODE 0b10000010
+#define ASTEROID_CODE   0b10000100
 
 
 typedef struct _playerState {
@@ -30,9 +31,19 @@ typedef struct _projectile {
     float rotation;
 } projectile;
 
-//ramka asteroid i graczy
+typedef struct _asteroid {
+    short asteroidID;
+    char size;
+    float posX;
+    float posY;
+    float speedX;
+    float speedY;
+    float rotation;
+} asteroid;
+
+//ramka pocisku i graczy
 #pragma pack(push,1)
-typedef struct _sendFrameEntity {
+typedef struct _entityFrame {
     unsigned char header;     //kod okreslajacy co to za rodzaj ramki (0b1000001 - gracz, 0b10000010 - pocisk)
     short ID;
     float posX;
@@ -40,7 +51,21 @@ typedef struct _sendFrameEntity {
     float speedX;
     float speedY;
     float rotation;
-} sendFrameEntity;
+} entityFrame;
+#pragma pack(pop)
+
+//asteroidy
+#pragma pack(push,1)
+typedef struct _asteroidFrame {
+    unsigned char header;     //kod okreslajacy co to za rodzaj ramki (0b10000100 - asteroida)
+    short ID;
+    float posX;
+    float posY;
+    float speedX;
+    float speedY;
+    float rotation;
+    char size;
+} asteroidFrame;
 #pragma pack(pop)
 
 //przykladowa ramka zawierajaca informacje serwera do klientow

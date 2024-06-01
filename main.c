@@ -18,6 +18,7 @@ int main() {
     //locks in data.h
     pthread_mutex_init(&playerVectorLock, NULL);
     pthread_mutex_init(&projectileVectorLock, NULL);
+    pthread_mutex_init(&asteroidVectorLock,NULL);
 
     //Create a socket struct
     struct sockaddr_in addr;
@@ -102,6 +103,7 @@ int main() {
 
     pthread_mutex_destroy(&playerVectorLock);
     pthread_mutex_destroy(&projectileVectorLock);
+    pthread_mutex_destroy(&asteroidVectorLock);
     closesocket(sockfd);
     WSACleanup();
     return 0;

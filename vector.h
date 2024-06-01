@@ -34,6 +34,13 @@ typedef struct _vectorProjectile{
     projectile* arr;
 } vectorProjectile;
 
+typedef struct _vectorAsteroid{
+    int size;
+    int capacity;
+    asteroid* arr;
+} vectorAsteroid;
+
+
 //following behaviour descriptons are the same for every vector type (int, thread, ...)
 
 //created a vector and binds it to given handle
@@ -79,6 +86,15 @@ void vectorProjectileRemoveAt(vectorProjectile* a,int toRemove);
 void vectorProjectileWrite(vectorProjectile* a);
 void vectorProjectileClear(vectorProjectile* a);
 void vectorProjectileDelete(vectorProjectile* a);
+
+void vectorAsteroidCreate(vectorAsteroid* a);
+void vectorAsteroidPush(vectorAsteroid* a, asteroid toAdd);
+void vectorAsteroidPop(vectorAsteroid* a);
+void vectorAsteroidRemove(vectorAsteroid* a,asteroid toRemove);
+void vectorAsteroidRemoveAt(vectorAsteroid* a,int toRemove);
+void vectorAsteroidWrite(vectorAsteroid* a);
+void vectorAsteroidClear(vectorAsteroid* a);
+void vectorAsteroidDelete(vectorAsteroid* a);
 
 typedef struct gameLoopParams{
     vectorPlayerState* players;

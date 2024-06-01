@@ -14,9 +14,11 @@
 
 pthread_mutex_t playerVectorLock;
 pthread_mutex_t projectileVectorLock;
+pthread_mutex_t asteroidVectorLock;
 
 vectorPlayerState players;
 vectorProjectile projectiles;
+vectorAsteroid asteroids;
 int projectileID;
 
 //dodawanie do wektora graczy
@@ -31,6 +33,12 @@ void addToProjectileVector(projectile toAdd){
     pthread_mutex_lock(&projectileVectorLock);
     vectorProjectilePush(&projectiles,toAdd);
     pthread_mutex_unlock(&projectileVectorLock);
+}
+
+void addToAsteroidVector(asteroid toAdd){
+    pthread_mutex_lock(&asteroidVectorLock);
+    vectorAsteroidPush(&asteroids,toAdd);
+    pthread_mutex_unlock(&asteroidVectorLock);
 }
 
 //usuwanie z wektora graczy

@@ -9,37 +9,44 @@
 #include "data.h"
 #include "gameEntities.h"
 
-
-void sendDataPlayerFromAToB(playerState* a, playerState* b)
+//sends data of player a to player b
+void sendPlayerData(playerState* a, playerState* b)
 {
     int sendTo = b->connectionAddr;
     //tworzenie ramki do przeslania (ramka gracz)
-    sendFrameEntity psf = {PLAYER_CODE,a->playerID,a->posX,a->posY,a->speedX,a->speedY,a->rotation};
-    send(sendTo,(char*)&psf,sizeof(sendFrameEntity),0);
+    entityFrame psf = {PLAYER_CODE, a->playerID, a->posX, a->posY, a->speedX, a->speedY, a->rotation};
+    send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
 }
 
-void sendDataProjectileAToPlayerB(projectile* a, playerState* b)
+//sends data of projectile a to player b
+void sendProjectileData(projectile* a, playerState* b)
 {
     int sendTo = b->connectionAddr;
     //tworzenie ramki do przeslania (ramka asteroid)
-    sendFrameEntity psf = {PROJECTILE_CODE,a->projectileID,a->posX,a->posY,a->speedX,a->speedY,a->rotation};
-    send(sendTo,(char*)&psf,sizeof(sendFrameEntity),0);
+    entityFrame psf = {PROJECTILE_CODE, a->projectileID, a->posX, a->posY, a->speedX, a->speedY, a->rotation};
+    send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
+}
+
+//sends data of asteroid a to player b
+void sendAsteroidData(asteroid * a, playerState* b){
+    int sendTo = b->connectionAddr;
+    //tworzenie ramki do przeslania (ramka asteroid)
+    asteroidFrame psf = {PROJECTILE_CODE, a->asteroidID, a->posX, a->posY, a->speedX, a->speedY, a->rotation, a->size};
+    send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
 }
 
 //TODO: TEST
 void test()
 {
     int sendTo = players.arr[0].connectionAddr;
-    sendFrameEntity psf = {PROJECTILE_CODE,123,1,2,3,4,5};
-    send(sendTo,(char*)&psf,sizeof(sendFrameEntity),0);
+    entityFrame psf = {PROJECTILE_CODE, 123, 1, 2, 3, 4, 5};
+    send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
     sendFrameSerwerInfo sfsi = {0b11110011,45};
     send(sendTo,(char*)&sfsi,sizeof(sendFrameSerwerInfo ),0);
 }
 
-void* handleOutput()
-{
-    while(1)
-    {
+void* handleOutput(){
+    while(1){
         //TODO
         //boje sie ciaglego zablokowania mutexa przez wysylanie
         //musze jeszcze przemyslec jak to naprawic
@@ -48,27 +55,20 @@ void* handleOutput()
         //pobieranie ilosci graczy
         int numberOfplayers = players.size;
         int numberOfprojectile = projectiles.size;
-        for(int i=0;i<numberOfplayers;i++)
-        {
+        int numberOfAsteroids = asteroids.size;
+        for(int i=0;i<numberOfplayers;i++){
             //wysylanie do gracza info o innych graczach
-            for(int j=0;j<numberOfplayers;j++)
-            {
-                //petla pobierajaca gracza i i j z vectora
-                //po pobraniu dwoch graczy graczowi i wyslij informacje o graczu j
-                //zeby to zrobic musisz pobrac dane o graczu j i connection number z gracza i
-                //wyslij
-                if(players.arr[j].playerID != players.arr[i].playerID){
-                //vectorPlayerStateWrite(&players);
-                //printf("i:%d,j:%d  ", i, j);
-                sendDataPlayerFromAToB(&players.arr[j],&players.arr[i]);
-                }
-
+            for(int j=0;j<numberOfplayers;j++){
+                if(players.arr[j].playerID != players.arr[i].playerID) sendPlayerData(&players.arr[j], &players.arr[i]);
             }
-
-            for(int k=0;k<numberOfprojectile;k++)
-            {
-                sendDataProjectileAToPlayerB(&projectiles.arr[k], &players.arr[i]);
+            //wysylanie pociskow
+            for(int k=0;k<numberOfprojectile;k++){
+                sendProjectileData(&projectiles.arr[k], &players.arr[i]);
             }
+            for(int l = 0; l < numberOfAsteroids; l++){
+                sendAsteroidData(&asteroids.arr[l], &players.arr[i]);
+            }
+            //wysylanie
         }
         //TODO: DO USUNIECIA
         //test();
@@ -77,7 +77,7 @@ void* handleOutput()
 
         //odczekaj x milisekund zanim znow cos wyslesz
         //pomaga to zapobiec obciazeniu watku klienta
-        Sleep(20);
+        Sleep(10);
     }
 }
 

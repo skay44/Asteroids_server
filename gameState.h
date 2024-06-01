@@ -9,8 +9,6 @@
 #include "vector.h"
 #include "data.h"
 
-
-
 void* gameplayLoop(void* params){
     LARGE_INTEGER frequency;        // ticks per second
     LARGE_INTEGER t1, t2;           // ticks
@@ -20,16 +18,20 @@ void* gameplayLoop(void* params){
     GLP* a = (GLP*) params;
     vectorPlayerStateCreate(&players);
     vectorProjectileCreate(&projectiles);
+    vectorAsteroidCreate(&asteroids);
+
     QueryPerformanceFrequency(&frequency);
 
-
+    float timePassed = 5;
     while(1){
         // start timer
         QueryPerformanceCounter(&t2);
         //deltaTime in ms
         deltaTime = (t2.QuadPart - t1.QuadPart)  *1000.0/ frequency.QuadPart;
 
-        pthread_mutex_lock(&playerVectorLock);
+        timePassed += (deltaTime * players.size) / 1000.0;
+
+        pthread_mutex_lock(&projectileVectorLock);
         for(int i =0; i < projectiles.size; i++){
             projectiles.arr[i].posX += projectiles.arr[i].speedX * deltaTime / 1000;
             projectiles.arr[i].posY += projectiles.arr[i].speedY * deltaTime / 1000;
@@ -46,11 +48,25 @@ void* gameplayLoop(void* params){
                 projectiles.arr[i].posY = 0;
             }
         }
-        pthread_mutex_unlock(&playerVectorLock);
-        if(projectiles.size > 0)
-            printf("%f\n", projectiles.arr[0].posY);
+        pthread_mutex_unlock(&projectileVectorLock);
+
+        if(timePassed > 5){
+            asteroid a;
+            a.size = 3;
+            a.posY = 200;
+            a.posX = 200;
+            a.rotation = 20;
+            a.speedX = 15;
+            a.speedY = 17;
+            timePassed-=10;
+            addToAsteroidVector(a);
+            timePassed -= 10;
+            printf("added asteroid\n");
+        }
+
         //vectorPlayerStateWrite(&players);
         t1 = t2;
+        Sleep(1);
     }
 }
 

@@ -26,7 +26,7 @@ void* handleInput(void* data){
     free(x);
     printf("In: %lld",sockfd);
     int bytes_received = 0;
-    char readBuffer[sizeof(sendFrameEntity )];  //maksymalny rozmiar buffora wynosi rozmiar najwiekszej ramki
+    char readBuffer[sizeof(entityFrame )];  //maksymalny rozmiar buffora wynosi rozmiar najwiekszej ramki
     int total_bytes_received = 0;
     while(1) {
         total_bytes_received = 0;
@@ -42,8 +42,8 @@ void* handleInput(void* data){
 
         if(header==PLAYER_CODE || header==PROJECTILE_CODE) { //ramka gracza i asteroid
             // Loop to ensure we receive the complete frame
-            while (total_bytes_received < sizeof(sendFrameEntity)) {
-                bytes_received = recv(sockfd, readBuffer + total_bytes_received, sizeof(sendFrameEntity) - total_bytes_received, 0);
+            while (total_bytes_received < sizeof(entityFrame)) {
+                bytes_received = recv(sockfd, readBuffer + total_bytes_received, sizeof(entityFrame) - total_bytes_received, 0);
                 if (bytes_received <= 0) {
                     // handle errors or connection closed
                     perror("recv failed");
@@ -53,7 +53,7 @@ void* handleInput(void* data){
                 total_bytes_received += bytes_received;
             }
             // Now we have a complete frame in readBuffer
-            sendFrameEntity* f = (sendFrameEntity*)readBuffer;
+            entityFrame* f = (entityFrame*)readBuffer;
             if(f->header==PLAYER_CODE){
                 printf("Get data from server. Player data: %d %f %f\n", f->ID, f->posY, f->posX);
             }
