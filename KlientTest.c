@@ -181,7 +181,6 @@ int main()
                     WSACleanup();
                     exit(1);
                 }*/
-
             }
             else if(key>='a'&&key<='z')
             {

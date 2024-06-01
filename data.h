@@ -7,7 +7,6 @@
 #include "gameEntities.h"
 #include "gameState.h"
 
-
 #ifndef SERVER_DATA_H
 #define SERVER_DATA_H
 

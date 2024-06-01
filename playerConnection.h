@@ -39,8 +39,8 @@ void debugFrame(Frame* f){
     printf("k: %d ",f->KeyboardKeys);
     printf("Xp: %f ",f->XPosition);
     printf("Yp: %f ",f->YPosition);
-    printf("Xv: %f ",f->YPosition);
-    printf("Yv: %f ",f->YPosition);
+    printf("Xv: %f ",f->XVelocity);
+    printf("Yv: %f ",f->YVelocity);
     printf("a: %f ",f->angle);
     printf("Xps: %f ",f->XPositionShot);
     printf("Yps: %f ",f->YPositionShot);
@@ -49,7 +49,7 @@ void debugFrame(Frame* f){
 }
 
 
-void* handleThread(void* x){
+void* handleInput(void* x){
     GLP2* data = (GLP2*)x;
     int connection = data->connection;
     int playerNum = data->playerNum;
