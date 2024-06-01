@@ -27,12 +27,28 @@ void* gameplayLoop(void* params){
         // start timer
         QueryPerformanceCounter(&t2);
         //deltaTime in ms
-        deltaTime = (t2.QuadPart - t1.QuadPart) * 1000.0 / frequency.QuadPart;
+        deltaTime = (t2.QuadPart - t1.QuadPart) / frequency.QuadPart;
 
-        char key = _getch();
-        _getch();
-        printf("%d: ", players.size);
-        vectorPlayerStateWrite(&players);
+        pthread_mutex_lock(&playerVectorLock);
+        for(int i =0; i < projectiles.size; i++){
+            projectiles.arr[i].posX += projectiles.arr[i].speedX * deltaTime;
+            projectiles.arr[i].posY += projectiles.arr[i].speedY * deltaTime;
+            if (projectiles.arr[i].posX < 0) {
+                projectiles.arr[i].posX = 1920;
+            }
+            else if (projectiles.arr[i].posX > 1920) {
+                projectiles.arr[i].posX = 0;
+            }
+            if (projectiles.arr[i].posY < 0) {
+                projectiles.arr[i].posY = 1080;
+            }
+            else if (projectiles.arr[i].posY > 1080) {
+                projectiles.arr[i].posY = 0;
+            }
+        }
+        pthread_mutex_unlock(&playerVectorLock);
+
+        //vectorPlayerStateWrite(&players);
         t1 = t2;
     }
 }
