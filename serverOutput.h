@@ -65,10 +65,11 @@ void sendPlayerDeleteData(vectorPlayerState * a, playerState* b){
 }
 
 void sendYouDiedData(vectorPlayerState * a, playerState* b){
-    int sendTo = b->connectionAddr;
+
 
     //tworzenie ramki do przeslania (ramka asteroid)
     for(int i = 0; i < a->size; i++){
+        int sendTo = a->arr[i].connectionAddr;
         printf("You died sent");
         deletus psf = {DELETUS_CODE, 4, a->arr[i].playerID};
         send(sendTo, (char*)&psf, sizeof(deletus), 0);
