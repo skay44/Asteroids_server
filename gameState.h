@@ -152,14 +152,12 @@ void collision(){
                     ASTEROID_SIZE * asteroidsCopy.arr[j].size);
             if(c == 1){
                 pthread_mutex_lock(&playersToDeleteLock);
-                vectorIntPush(&playersToDelete, playersCopy.arr[i].playerID);
+                vectorPlayerStatePush(&playersToDelete, playersCopy.arr[i]);
                 pthread_mutex_unlock(&playersToDeleteLock);
 
                 pthread_mutex_lock(&playerVectorLock);
                 vectorPlayerStateRemove(&players,playersCopy.arr[i]);
                 vectorPlayerStateRemove(&playersCopy, playersCopy.arr[i]);
-                //!!!!!!!!!!!!!!!!!!!!!!
-                vectorIntPush(&playerConnections, playersCopy.arr[i].connectionAddr);
                 pthread_mutex_unlock(&playerVectorLock);
 
 

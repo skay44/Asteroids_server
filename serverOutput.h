@@ -9,31 +9,24 @@
 #include "data.h"
 #include "gameEntities.h"
 
-//sends data of player a to player b
 void sendPlayerData(playerState* a, int sendTo)
 {
-    //tworzenie ramki do przeslania (ramka gracz)
     entityFrame psf = {PLAYER_CODE, a->playerID, a->posX, a->posY, a->speedX, a->speedY, a->rotation};
     send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
 }
 
-//sends data of projectile a to player b
 void sendProjectileData(projectile* a, int sendTo)
 {
-    //tworzenie ramki do przeslania (ramka asteroid)
     entityFrame psf = {PROJECTILE_CODE, a->projectileID, a->posX, a->posY, a->speedX, a->speedY, a->rotation};
     send(sendTo, (char*)&psf, sizeof(entityFrame), 0);
 }
 
-//sends data of asteroid a to player b
 void sendAsteroidData(asteroid * a, int sendTo){
-    //tworzenie ramki do przeslania (ramka asteroid)
     asteroidFrame psf = {ASTEROID_CODE, a->asteroidID, a->posX, a->posY, a->speedX, a->speedY, a->rotation, a->size};
     send(sendTo, (char*)&psf, sizeof(asteroidFrame), 0);
 }
 
 void sendProjectileDeleteData(vectorInt* a, int sendTo){
-    //tworzenie ramki do przeslania (ramka asteroid)
     for(int i = 0; i < a->size; i++){
         deletus psf = {DELETUS_CODE, 2, a->arr[i]};
         send(sendTo, (char*)&psf, sizeof(deletus), 0);
@@ -41,29 +34,25 @@ void sendProjectileDeleteData(vectorInt* a, int sendTo){
 }
 
 void sendAsteroidDeleteData(vectorInt* a, int sendTo){
-    //tworzenie ramki do przeslania (ramka asteroid)
     for(int i = 0; i < a->size; i++){
         deletus psf = {DELETUS_CODE, 3, a->arr[i]};
         send(sendTo, (char*)&psf, sizeof(deletus), 0);
     }
 }
 
-//special case
-
 void sendPlayerDeleteData(vectorPlayerState * a, int sendTo){
-    //tworzenie ramki do przeslania (ramka asteroid)
     for(int i = 0; i < a->size; i++){
+        printf("Send %d to %d",a->arr[i].connectionAddr, sendTo);
         deletus psf = {DELETUS_CODE, 1, a->arr[i].playerID};
         send(sendTo, (char*)&psf, sizeof(deletus), 0);
     }
 }
 
-void sendYouDiedData(vectorPlayerState * a,int sendTo){
-    //tworzenie ramki do przeslania (ramka asteroid)
+void sendYouDiedData(vectorPlayerState * a){
     for(int i = 0; i < a->size; i++){
         printf("You died sent");
         deletus psf = {DELETUS_CODE, 4, a->arr[i].playerID};
-        send(sendTo, (char*)&psf, sizeof(deletus), 0);
+        send(a->arr[i].connectionAddr, (char*)&psf, sizeof(deletus), 0);
     }
 }
 
@@ -79,17 +68,10 @@ void test()
 
 void* handleOutput(){
     while(1){
-        //TODO
-        //boje sie ciaglego zablokowania mutexa przez wysylanie
-        //musze jeszcze przemyslec jak to naprawic
-        //pthread_mutex_lock(&projectileVectorLock);
-        //pthread_mutex_lock(&playerVectorLock);
-        //pobieranie ilosci graczy
-        //int numberOfplayers = players.size;
         int numberOfAsteroids = asteroids.size;
         int numberOfRecievers = playerConnections.size;
-        printf("number of recievers %d\n",numberOfRecievers);
 
+        //sending projectile
         pthread_mutex_lock(&idsOfProjectilesToDeleteLock);
         for(int i=0;i<numberOfRecievers;i++) {
             sendProjectileDeleteData(&idsOfProjectilesToDelete, playerConnections.arr[i]);
@@ -97,7 +79,7 @@ void* handleOutput(){
         vectorIntClear(&idsOfProjectilesToDelete);
         pthread_mutex_unlock(&idsOfProjectilesToDeleteLock);
 
-
+        //asteroids to delete
         pthread_mutex_lock(&idsOfAsteroidsToDeleteLock);
         for(int i=0;i<numberOfRecievers;i++) {
             sendAsteroidDeleteData(&idsOfAsteroidsToDelete, playerConnections.arr[i]);
@@ -105,18 +87,13 @@ void* handleOutput(){
         vectorIntClear(&idsOfAsteroidsToDelete);
         pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
 
-        //special case
 
+        //deleting players
         pthread_mutex_lock(&playersToDeleteLock);
-
-
-        for(int i=0; i < numberOfRecievers; i++) {
-            sendYouDiedData(&playersToDelete, playerConnections.arr[i]);
-        }
-
         for(int i=0;i<numberOfRecievers;i++) {
             sendPlayerDeleteData(&playersToDelete, playerConnections.arr[i]);
         }
+        sendYouDiedData(&playersToDelete);
         vectorPlayerStateClear(&playersToDelete);
         pthread_mutex_unlock(&playersToDeleteLock);
 
