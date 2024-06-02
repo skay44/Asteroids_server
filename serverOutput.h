@@ -136,6 +136,7 @@ void* handleOutput(){
 
         //odczekaj x milisekund zanim znow cos wyslesz
         //pomaga to zapobiec obciazeniu watku klienta
+
         Sleep(10);
     }
 }
