@@ -3,6 +3,7 @@ project(Server C)
 
 set(CMAKE_C_STANDARD 99)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --static")
 
 find_package(Threads REQUIRED)
 
@@ -17,7 +18,7 @@ add_executable(Server
 )
 
 
-target_link_libraries(Server ws2_32 ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(Server PRIVATE ws2_32 Threads::Threads)
 
 # Client executable
 add_executable(Client KlientTest.c vector.c
@@ -25,4 +26,4 @@ add_executable(Client KlientTest.c vector.c
         playerConnection.h
         data.h
         gameEntities.h)
-target_link_libraries(Client ws2_32 ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(Client PRIVATE ws2_32 Threads::Threads)
