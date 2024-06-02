@@ -151,14 +151,14 @@ void collision(){
                     PLAYER_SIZE,
                     ASTEROID_SIZE * asteroidsCopy.arr[j].size);
             if(c == 1){
-                /*
                 pthread_mutex_lock(&playersToDeleteLock);
                 vectorIntPush(&playersToDelete, playersCopy.arr[i].playerID);
                 pthread_mutex_unlock(&playersToDeleteLock);
 
                 pthread_mutex_lock(&playerVectorLock);
                 vectorPlayerStateRemove(&players,playersCopy.arr[i]);
-                pthread_mutex_unlock(&playerVectorLock);*/
+                vectorPlayerStateRemove(&playersCopy, playersCopy.arr[i]);
+                pthread_mutex_unlock(&playerVectorLock);
 
 
                 pthread_mutex_lock(&idsOfAsteroidsToDeleteLock);
@@ -166,6 +166,7 @@ void collision(){
                 pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
 
                 pthread_mutex_lock(&asteroidVectorLock);
+                vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
                 pthread_mutex_unlock(&asteroidVectorLock);
                 //i--;
@@ -186,21 +187,25 @@ void collision(){
                     ASTEROID_SIZE * asteroidsCopy.arr[j].size);
             if(c == 1){
                 //deleting projectile
+
                 pthread_mutex_lock(&idsOfProjectilesToDeleteLock);
                 vectorIntPush(&idsOfProjectilesToDelete, projectilesCopy.arr[i].projectileID);
                 pthread_mutex_unlock(&idsOfProjectilesToDeleteLock);
 
                 pthread_mutex_lock(&projectileVectorLock);
                 vectorProjectileRemove(&projectiles,projectilesCopy.arr[i]);
+                vectorProjectileRemove(&projectilesCopy,projectilesCopy.arr[i]);
                 pthread_mutex_unlock(&projectileVectorLock);
 
                 //deleting asteroid
+
                 pthread_mutex_lock(&idsOfAsteroidsToDeleteLock);
                 vectorIntPush(&idsOfAsteroidsToDelete, asteroidsCopy.arr[j].asteroidID);
                 pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
 
                 pthread_mutex_lock(&asteroidVectorLock);
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
+                vectorAsteroidRemove(&asteroidsCopy, asteroidsCopy.arr[j]);
                 pthread_mutex_unlock(&asteroidVectorLock);
                 i--;
                 j--;

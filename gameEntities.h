@@ -83,7 +83,7 @@ typedef struct _sendFrameSerwerInfo {
 #pragma pack(push,1)
 typedef struct _deletus {
     unsigned char header;       //kod okreslajacy co to za rodzaj ramki (inne niz 0b1000001 oraz 0b10001000)
-    unsigned char toDelete;     //1- delete player 2- delete projectile 3- delete asteroid
+    unsigned char toDelete;     //1- delete player 2- delete projectile 3- delete asteroid  4- delete you
     unsigned char id;           //id of element to delete
 } deletus;
 #pragma pack(pop)
