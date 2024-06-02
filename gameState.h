@@ -158,6 +158,8 @@ void collision(){
                 pthread_mutex_lock(&playerVectorLock);
                 vectorPlayerStateRemove(&players,playersCopy.arr[i]);
                 vectorPlayerStateRemove(&playersCopy, playersCopy.arr[i]);
+                //!!!!!!!!!!!!!!!!!!!!!!
+                vectorIntPush(&ToDeletePlayers, playersCopy.arr[i].connectionAddr);
                 pthread_mutex_unlock(&playerVectorLock);
 
 
@@ -231,6 +233,7 @@ void* gameplayLoop(void* params){
     vectorIntCreate(&idsOfProjectilesToDelete);
     vectorIntCreate(&idsOfAsteroidsToDelete);
     vectorPlayerStateCreate(&playersToDelete);
+    vectorIntCreate(&ToDeletePlayers);
 
     QueryPerformanceCounter(&t1);
     QueryPerformanceFrequency(&frequency);
