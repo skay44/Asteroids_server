@@ -64,9 +64,7 @@ void sendPlayerDeleteData(vectorPlayerState * a, playerState* b){
     }
 }
 
-void sendYouDiedData(vectorPlayerState * a, playerState* b){
-
-
+void sendYouDiedData(vectorPlayerState * a){
     //tworzenie ramki do przeslania (ramka asteroid)
     for(int i = 0; i < a->size; i++){
         int sendTo = a->arr[i].connectionAddr;
@@ -115,9 +113,7 @@ void* handleOutput(){
         //special case
 
         pthread_mutex_lock(&playersToDeleteLock);
-        for(int i =0;i<playersToDelete.size; i++){
-            sendYouDiedData(&playersToDelete, &playersToDelete.arr[i]);
-        }
+        sendYouDiedData(&playersToDelete);
         for(int i=0;i<numberOfplayers;i++) {
             sendPlayerDeleteData(&playersToDelete, &players.arr[i]);
         }
