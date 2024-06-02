@@ -13,7 +13,7 @@
 #define PLAYER_SIZE 25
 typedef struct _playerState {
     int connectionAddr;
-    short playerID;
+    unsigned int playerID;
     char ifShoot;
     char keys;
     float posX;
@@ -25,7 +25,7 @@ typedef struct _playerState {
 
 #define PROJECTILE_SIZE 15
 typedef struct _projectile {
-    short projectileID;
+    unsigned int projectileID;
     float posX;
     float posY;
     float speedX;
@@ -36,7 +36,7 @@ typedef struct _projectile {
 
 #define ASTEROID_SIZE 12.5
 typedef struct _asteroid {
-    short asteroidID;
+    unsigned int asteroidID;
     char size;
     float posX;
     float posY;
@@ -49,7 +49,7 @@ typedef struct _asteroid {
 #pragma pack(push,1)
 typedef struct _entityFrame {
     unsigned char header;     //kod okreslajacy co to za rodzaj ramki (0b1000001 - gracz, 0b10000010 - pocisk)
-    short ID;
+    unsigned int ID;
     float posX;
     float posY;
     float speedX;
@@ -62,7 +62,7 @@ typedef struct _entityFrame {
 #pragma pack(push,1)
 typedef struct _asteroidFrame {
     unsigned char header;     //kod okreslajacy co to za rodzaj ramki (0b10000100 - asteroida)
-    short ID;
+    unsigned int ID;
     float posX;
     float posY;
     float speedX;
@@ -84,7 +84,7 @@ typedef struct _sendFrameSerwerInfo {
 typedef struct _deletus {
     unsigned char header;       //kod okreslajacy co to za rodzaj ramki (inne niz 0b1000001 oraz 0b10001000)
     unsigned char toDelete;     //1- delete player 2- delete projectile 3- delete asteroid  4- delete you
-    unsigned char id;           //id of element to delete
+    unsigned int id;           //id of element to delete
 } deletus;
 #pragma pack(pop)
 

@@ -11,8 +11,8 @@
 #include "vector.h"
 #include "data.h"
 
-#define ASTEROID_SPAWN_DELAY 5
-#define MAX_ASTEROID_AMOUNT 20
+#define ASTEROID_SPAWN_DELAY 3
+#define MAX_ASTEROID_AMOUNT 40
 
 char summonAsteroidsOfSaidSize(int size, float locX, float locY){
     asteroid a;
@@ -269,7 +269,7 @@ void* gameplayLoop(void* params){
     double asteroidSpawnTime = ASTEROID_SPAWN_DELAY;
     while(1){
         // 1.handling change in time
-        printf("asteroids amount: %d\n", asteroidsAmount);
+        //printf("asteroids amount: %d\n", asteroidsAmount);
         Sleep(1);
         t1 = t2;
         // start timer
