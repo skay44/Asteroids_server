@@ -57,7 +57,7 @@ void sendYouDiedData(vectorPlayerState * a){
 }
 
 void sendGameScoreData(int sendTo){
-    printf("Score: %d to %d\n",gameScore,sendTo);
+    //printf("Score: %d to %d\n",gameScore,sendTo);
     sendScoreFrame sfsi = {SCORE_CODE,gameScore};
     send(sendTo, (char*)&sfsi, sizeof(sendScoreFrame), 0);
 }
@@ -103,6 +103,7 @@ void* handleOutput(){
         vectorPlayerStateClear(&playersToDelete);
         pthread_mutex_unlock(&playersToDeleteLock);
 
+        //sending game score
         pthread_mutex_lock(&gameScoreUpdateLock);
         for(int i=0;i<numberOfRecievers;i++) {
             sendGameScoreData(playerConnections.arr[i]);

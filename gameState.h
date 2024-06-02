@@ -170,14 +170,29 @@ void collision(int* asteroidsAmount){
                     PLAYER_SIZE,
                     ASTEROID_SIZE * asteroidsCopy.arr[j].size);
             if(c == 1){
-                pthread_mutex_lock(&playersToDeleteLock);
-                vectorPlayerStatePush(&playersToDelete, playersCopy.arr[i]);
-                pthread_mutex_unlock(&playersToDeleteLock);
+                if(asteroidsCopy.arr[j].size == 1){
+                    (*asteroidsAmount)--;
+                }
+                else{
+                    for(int i = 0; i < 3; i++){
+                        summonAsteroidsOfSaidSize(asteroidsCopy.arr[j].size - 1, asteroidsCopy.arr[j].posX, asteroidsCopy.arr[j].posY);
+                    }
+                }
 
-                pthread_mutex_lock(&playerVectorLock);
-                vectorPlayerStateRemove(&players,playersCopy.arr[i]);
-                vectorPlayerStateRemove(&playersCopy, playersCopy.arr[i]);
-                pthread_mutex_unlock(&playerVectorLock);
+                printf("%f",playersCopy.arr[i].invincibility);
+                if(playersCopy.arr[i].invincibility <= 0){
+
+
+                    pthread_mutex_lock(&playersToDeleteLock);
+                    vectorPlayerStatePush(&playersToDelete, playersCopy.arr[i]);
+                    pthread_mutex_unlock(&playersToDeleteLock);
+
+                    pthread_mutex_lock(&playerVectorLock);
+                    vectorPlayerStateRemove(&players,playersCopy.arr[i]);
+                    vectorPlayerStateRemove(&playersCopy, playersCopy.arr[i]);
+                    pthread_mutex_unlock(&playerVectorLock);
+                    i--;
+                }
 
                 pthread_mutex_lock(&idsOfAsteroidsToDeleteLock);
                 vectorIntPush(&idsOfAsteroidsToDelete, asteroidsCopy.arr[j].asteroidID);
@@ -187,7 +202,7 @@ void collision(int* asteroidsAmount){
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
                 pthread_mutex_unlock(&asteroidVectorLock);
-                i--;
+
                 j--;
 
                 subtractGamePoints();
@@ -250,6 +265,16 @@ void collision(int* asteroidsAmount){
     vectorAsteroidDelete(&asteroidsCopy);
 }
 
+void updatePlayers(double deltaTime){
+    pthread_mutex_lock(&playerVectorLock);
+    for(int i = 0; i < players.size; i++){
+        if(players.arr[i].invincibility > 0){
+            players.arr[i].invincibility -= deltaTime / 1000.0;
+        }
+    }
+    pthread_mutex_unlock(&playerVectorLock);
+}
+
 void* gameplayLoop(void* params){
     LARGE_INTEGER frequency;        // ticks per second
     LARGE_INTEGER t1, t2;           // ticks
@@ -283,6 +308,7 @@ void* gameplayLoop(void* params){
 
         // 2.updating entities
 
+        updatePlayers(deltaTime);
         updateProjectiles(deltaTime);
         updateAsteroids(deltaTime);
 

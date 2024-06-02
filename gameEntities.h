@@ -22,6 +22,7 @@ typedef struct _playerState {
     float speedX;
     float speedY;
     float rotation;
+    float invincibility;
 } playerState;
 
 #define PROJECTILE_SIZE 15

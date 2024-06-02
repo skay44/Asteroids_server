@@ -68,7 +68,7 @@ void* handleInput(void* x){
                 if(!findInPlayerVector(playerNum)){
                     if(added == 0){
                         added = 1;
-
+                        ps.invincibility = 5;
                         addToPlayerVector(ps);
 
                         pthread_mutex_lock(&playersConnectionLocks);
