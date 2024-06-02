@@ -169,7 +169,7 @@ void collision(){
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
                 pthread_mutex_unlock(&asteroidVectorLock);
-                //i--;
+                i--;
                 j--;
                 break;
             }
