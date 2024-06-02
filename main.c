@@ -22,6 +22,7 @@ int main() {
     pthread_mutex_init(&idsOfProjectilesToDeleteLock, NULL);
     pthread_mutex_init(&idsOfAsteroidsToDeleteLock, NULL);
     pthread_mutex_init(&playersToDeleteLock, NULL);
+    pthread_mutex_init(&playersConnectionLocks, NULL);
 
     //Create a socket struct
     struct sockaddr_in addr;
@@ -103,6 +104,7 @@ int main() {
             playerNum++;
         }
     }
+    pthread_mutex_destroy(&playersConnectionLocks);
     pthread_mutex_destroy(&playersToDeleteLock);
     pthread_mutex_destroy(&playerVectorLock);
     pthread_mutex_destroy(&projectileVectorLock);

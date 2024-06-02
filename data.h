@@ -18,6 +18,7 @@ pthread_mutex_t asteroidVectorLock;
 pthread_mutex_t idsOfProjectilesToDeleteLock;
 pthread_mutex_t idsOfAsteroidsToDeleteLock;
 pthread_mutex_t playersToDeleteLock;
+pthread_mutex_t playersConnectionLocks;
 
 
 vectorPlayerState players;
@@ -26,7 +27,7 @@ vectorAsteroid asteroids;
 vectorInt idsOfProjectilesToDelete;
 vectorInt idsOfAsteroidsToDelete;
 vectorPlayerState playersToDelete;
-vectorInt ToDeletePlayersConnections;
+vectorInt playerConnections;
 
 int projectileID;
 int asteroidID;

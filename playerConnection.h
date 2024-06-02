@@ -69,6 +69,10 @@ void* handleInput(void* x){
                     if(added == 0){
                         added = 1;
                         addToPlayerVector(ps);
+                        pthread_mutex_lock(&playersConnectionLocks);
+                        vectorIntPush(&playerConnections,ps.connectionAddr);
+                        printf("ADDED PLAYER");
+                        pthread_mutex_unlock(&playersConnectionLocks);
                     }
                     else{
                         printf("Player %d died", playerNum);
@@ -93,6 +97,11 @@ void* handleInput(void* x){
         }
         else{
             printf("Connection lost with player: %d\n", playerNum);
+
+            pthread_mutex_lock(&playersConnectionLocks);
+            vectorIntRemove(&playerConnections,ps.connectionAddr);
+            pthread_mutex_unlock(&playersConnectionLocks);
+
             if(findInPlayerVector(playerNum)){
                 removeFromPLayerVector(ps);
             }
