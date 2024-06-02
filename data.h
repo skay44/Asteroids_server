@@ -26,7 +26,7 @@ vectorAsteroid asteroids;
 vectorInt idsOfProjectilesToDelete;
 vectorInt idsOfAsteroidsToDelete;
 vectorPlayerState playersToDelete;
-vectorInt ToDeletePlayers;
+vectorInt ToDeletePlayersConnections;
 
 int projectileID;
 int asteroidID;

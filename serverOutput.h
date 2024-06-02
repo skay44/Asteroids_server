@@ -115,9 +115,10 @@ void* handleOutput(){
         pthread_mutex_lock(&playersToDeleteLock);
 
 
-        for(int i=0;i<ToDeletePlayers.size;i++) {
-            sendYouDiedData(&playersToDelete, ToDeletePlayers.arr[i]);
+        for(int i=0; i < ToDeletePlayersConnections.size; i++) {
+            sendYouDiedData(&playersToDelete, ToDeletePlayersConnections.arr[i]);
         }
+        vectorIntClear(&ToDeletePlayersConnections);
 
 
         for(int i=0;i<numberOfplayers;i++) {
