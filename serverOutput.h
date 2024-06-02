@@ -101,6 +101,7 @@ void* handleOutput(){
         pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
 
         //special case
+        /*
         pthread_mutex_lock(&playersToDeleteLock);
         for(int i =0;i<playersToDelete.size; i++){
             sendPlayerDeleteData(&playersToDelete, &playersToDelete.arr[i]);
@@ -109,7 +110,7 @@ void* handleOutput(){
             sendPlayerDeleteData(&playersToDelete, &players.arr[i]);
         }
         vectorPlayerStateCreate(&playersToDelete);
-        pthread_mutex_unlock(&playersToDeleteLock);
+        pthread_mutex_unlock(&playersToDeleteLock);*/
 
 
         for(int i=0;i<numberOfplayers;i++){
