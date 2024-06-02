@@ -96,9 +96,11 @@ void* handleOutput(){
 
         //deleting players
         pthread_mutex_lock(&playersToDeleteLock);
+
         for(int i=0;i<numberOfRecievers;i++) {
             sendPlayerDeleteData(&playersToDelete, playerConnections.arr[i]);
         }
+
         sendYouDiedData(&playersToDelete);
         vectorPlayerStateClear(&playersToDelete);
         pthread_mutex_unlock(&playersToDeleteLock);
@@ -110,9 +112,9 @@ void* handleOutput(){
         }
         pthread_mutex_unlock(&gameScoreUpdateLock);
 
-        for(int i=0;i<numberOfRecievers;i++){
+        for(int i=0;i<numberOfRecievers;i++){ //pokolwi wysyla odbiorcom
             //wysylanie do gracza info o innych graczach
-            for(int j=0;j<numberOfRecievers;j++){
+            for(int j=0;j<players.size;j++){
                 if(players.arr[j].connectionAddr != playerConnections.arr[i]) sendPlayerData(&players.arr[j], playerConnections.arr[i]);
             }
             //wysylanie pociskow

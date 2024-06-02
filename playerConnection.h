@@ -102,7 +102,13 @@ void* handleInput(void* x){
             printf("Connection lost with player: %d\n", playerNum);
 
             pthread_mutex_lock(&playersConnectionLocks);
+
             vectorIntRemove(&playerConnections,ps.connectionAddr);
+            for(int i = 0; i < playerConnections.size; i++){
+                deletus psf = {DELETUS_CODE, 1, playerNum};
+                send(playerConnections.arr[i], (char*)&psf, sizeof(deletus), 0);
+            }
+
             pthread_mutex_unlock(&playersConnectionLocks);
 
             if(findInPlayerVector(playerNum)){
