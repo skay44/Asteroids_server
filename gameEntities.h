@@ -10,7 +10,7 @@
 #define ASTEROID_CODE   0b10000100
 #define DELETUS_CODE    0b10001000
 
-
+#define PLAYER_SIZE 25
 typedef struct _playerState {
     int connectionAddr;
     short playerID;
@@ -23,6 +23,7 @@ typedef struct _playerState {
     float rotation;
 } playerState;
 
+#define PROJECTILE_SIZE 15
 typedef struct _projectile {
     short projectileID;
     float posX;
@@ -33,6 +34,7 @@ typedef struct _projectile {
     float lifetime;
 } projectile;
 
+#define ASTEROID_SIZE 12.5
 typedef struct _asteroid {
     short asteroidID;
     char size;

@@ -20,6 +20,8 @@ int main() {
     pthread_mutex_init(&projectileVectorLock, NULL);
     pthread_mutex_init(&asteroidVectorLock,NULL);
     pthread_mutex_init(&idsOfProjectilesToDeleteLock, NULL);
+    pthread_mutex_init(&idsOfAsteroidsToDeleteLock, NULL);
+    pthread_mutex_init(&playersToDeleteLock, NULL);
 
     //Create a socket struct
     struct sockaddr_in addr;
@@ -101,11 +103,12 @@ int main() {
             playerNum++;
         }
     }
-
+    pthread_mutex_destroy(&playersToDeleteLock);
     pthread_mutex_destroy(&playerVectorLock);
     pthread_mutex_destroy(&projectileVectorLock);
     pthread_mutex_destroy(&asteroidVectorLock);
     pthread_mutex_destroy(&idsOfProjectilesToDeleteLock);
+    pthread_mutex_destroy(&idsOfAsteroidsToDeleteLock);
     closesocket(sockfd);
     WSACleanup();
     return 0;

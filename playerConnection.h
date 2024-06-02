@@ -36,6 +36,8 @@ void* handleInput(void* x){
     GLP2* data = (GLP2*)x;
     int connection = data->connection;
     int playerNum = data->playerNum;
+    int added = 0;
+    int dead = 0;
     vectorPlayerState* players = data->players;
     vectorProjectile* projectiles = data->projectiles;
     Frame f;
@@ -53,32 +55,40 @@ void* handleInput(void* x){
             f = *((Frame*)&readBuffer);
             //printf("Player %d, connection %d: ", playerNum,connection);
             //debugFrame(&f);
-
-            ps.connectionAddr = connection;
-            ps.posX = f.XPosition;
-            ps.posY = f.YPosition;
-            ps.speedY = f.XVelocity;
-            ps.speedX = f.YVelocity;
-            ps.playerID = playerNum;
-            ps.ifShoot = f.Shot;
-            ps.keys = f.KeyboardKeys;
-            ps.rotation = f.angle;
-            if(!findInPlayerVector(playerNum)){
-                addToPlayerVector(ps);
-            }
-            else{
-                updatePlayerVector(ps);
-            }
-            if(ps.ifShoot == true){
-                pr.posX = f.XPositionShot;
-                pr.posY = f.YPositionShot;
-                pr.speedX = f.XVelocityShot;
-                pr.speedY = f.YVelocityShot;
-                pr.rotation = f.angle;
-                pr.projectileID = projectileID;
-                pr.lifetime = 5;
-                projectileID++;
-                addToProjectileVector(pr);
+            if(dead == 0){
+                ps.connectionAddr = connection;
+                ps.posX = f.XPosition;
+                ps.posY = f.YPosition;
+                ps.speedY = f.XVelocity;
+                ps.speedX = f.YVelocity;
+                ps.playerID = playerNum;
+                ps.ifShoot = f.Shot;
+                ps.keys = f.KeyboardKeys;
+                ps.rotation = f.angle;
+                if(!findInPlayerVector(playerNum)){
+                    if(added == 0){
+                        added = 1;
+                        addToPlayerVector(ps);
+                    }
+                    else{
+                        printf("Player %d died", playerNum);
+                        dead = 1;
+                    }
+                }
+                else{
+                    updatePlayerVector(ps);
+                }
+                if(ps.ifShoot == true){
+                    pr.posX = f.XPositionShot;
+                    pr.posY = f.YPositionShot;
+                    pr.speedX = f.XVelocityShot;
+                    pr.speedY = f.YVelocityShot;
+                    pr.rotation = f.angle;
+                    pr.projectileID = projectileID;
+                    pr.lifetime = 5;
+                    projectileID++;
+                    addToProjectileVector(pr);
+                }
             }
         }
         else{

@@ -16,11 +16,17 @@ pthread_mutex_t playerVectorLock;
 pthread_mutex_t projectileVectorLock;
 pthread_mutex_t asteroidVectorLock;
 pthread_mutex_t idsOfProjectilesToDeleteLock;
+pthread_mutex_t idsOfAsteroidsToDeleteLock;
+pthread_mutex_t playersToDeleteLock;
+
 
 vectorPlayerState players;
 vectorProjectile projectiles;
 vectorAsteroid asteroids;
+vectorInt idsOfProjectilesToDelete;
 vectorInt idsOfAsteroidsToDelete;
+vectorPlayerState playersToDelete;
+
 int projectileID;
 int asteroidID;
 
@@ -51,6 +57,15 @@ void removeFromPLayerVector(playerState toRemove)
     vectorPlayerStateRemove(&players,toRemove);
     pthread_mutex_unlock(&playerVectorLock);
 }
+
+//TODO fix
+void removeFromProjectileVector(projectile toRemove)
+{
+    pthread_mutex_lock(&projectileVectorLock);
+    vectorProjectileRemove(&projectiles,toRemove);
+    pthread_mutex_unlock(&projectileVectorLock);
+}
+
 
 //TODO usunac
 bool findInPlayerVector(int check){

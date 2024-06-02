@@ -35,7 +35,7 @@ void sendAsteroidData(asteroid * a, playerState* b){
     send(sendTo, (char*)&psf, sizeof(asteroidFrame), 0);
 }
 
-void sendDeleteData(vectorInt* a, playerState* b){
+void sendProjectileDeleteData(vectorInt* a, playerState* b){
     int sendTo = b->connectionAddr;
     //tworzenie ramki do przeslania (ramka asteroid)
     for(int i = 0; i < a->size; i++){
@@ -44,6 +44,25 @@ void sendDeleteData(vectorInt* a, playerState* b){
     }
 }
 
+void sendAsteroidDeleteData(vectorInt* a, playerState* b){
+    int sendTo = b->connectionAddr;
+    //tworzenie ramki do przeslania (ramka asteroid)
+    for(int i = 0; i < a->size; i++){
+        deletus psf = {DELETUS_CODE, 3, a->arr[i]};
+        send(sendTo, (char*)&psf, sizeof(deletus), 0);
+    }
+}
+
+//special case
+
+void sendPlayerDeleteData(vectorPlayerState * a, playerState* b){
+    int sendTo = b->connectionAddr;
+    //tworzenie ramki do przeslania (ramka asteroid)
+    for(int i = 0; i < a->size; i++){
+        deletus psf = {DELETUS_CODE, 1, a->arr[i].playerID};
+        send(sendTo, (char*)&psf, sizeof(deletus), 0);
+    }
+}
 
 //TODO: TEST
 void test()
@@ -69,10 +88,28 @@ void* handleOutput(){
 
         pthread_mutex_lock(&idsOfProjectilesToDeleteLock);
         for(int i=0;i<numberOfplayers;i++) {
-            sendDeleteData(&idsOfAsteroidsToDelete, &players.arr[i]);
+            sendProjectileDeleteData(&idsOfProjectilesToDelete, &players.arr[i]);
+        }
+        vectorIntClear(&idsOfProjectilesToDelete);
+        pthread_mutex_unlock(&idsOfProjectilesToDeleteLock);
+
+        pthread_mutex_lock(&idsOfAsteroidsToDeleteLock);
+        for(int i=0;i<numberOfplayers;i++) {
+            sendAsteroidDeleteData(&idsOfAsteroidsToDelete, &players.arr[i]);
         }
         vectorIntClear(&idsOfAsteroidsToDelete);
-        pthread_mutex_unlock(&idsOfProjectilesToDeleteLock);
+        pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
+
+        //special case
+        pthread_mutex_lock(&playersToDeleteLock);
+        for(int i =0;i<playersToDelete.size; i++){
+            sendPlayerDeleteData(&playersToDelete, &playersToDelete.arr[i]);
+        }
+        for(int i=0;i<numberOfplayers;i++) {
+            sendPlayerDeleteData(&playersToDelete, &players.arr[i]);
+        }
+        vectorPlayerStateCreate(&playersToDelete);
+        pthread_mutex_unlock(&playersToDeleteLock);
 
 
         for(int i=0;i<numberOfplayers;i++){
