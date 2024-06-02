@@ -101,7 +101,7 @@ void* handleOutput(){
         for(int i=0;i<numberOfRecievers;i++){
             //wysylanie do gracza info o innych graczach
             for(int j=0;j<numberOfRecievers;j++){
-                if(players.arr[j].playerID != players.arr[i].playerID) sendPlayerData(&players.arr[j], playerConnections.arr[i]);
+                if(players.arr[j].connectionAddr != playerConnections.arr[i]) sendPlayerData(&players.arr[j], playerConnections.arr[i]);
             }
             //wysylanie pociskow
 

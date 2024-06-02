@@ -12,7 +12,7 @@
 #include "data.h"
 
 #define ASTEROID_SPAWN_DELAY 3
-#define MAX_ASTEROID_AMOUNT 100
+#define MAX_ASTEROID_AMOUNT 1
 
 char summonAsteroids(double* timePassed){
     asteroid a;
