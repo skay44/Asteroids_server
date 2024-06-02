@@ -104,7 +104,7 @@ int main(){
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(2278);
     gethostname(hostname,sizeof(hostname)-1);
-    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.1.101");
+    serverAddr.sin_addr.S_un.S_addr = inet_addr("192.168.1.104");
 
     result = connect(sockfd, (struct sockaddr*)& serverAddr, sizeof(serverAddr));
     if(result == SOCKET_ERROR){

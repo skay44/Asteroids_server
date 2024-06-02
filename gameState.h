@@ -171,6 +171,8 @@ void collision(){
                 pthread_mutex_unlock(&asteroidVectorLock);
                 i--;
                 j--;
+
+                subtractGamePoints();
                 break;
             }
         }
@@ -204,6 +206,7 @@ void collision(){
                 pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
 
                 pthread_mutex_lock(&asteroidVectorLock);
+                addAsteroidGamePoints(asteroidsCopy.arr[j]);
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
                 vectorAsteroidRemove(&asteroidsCopy, asteroidsCopy.arr[j]);
                 pthread_mutex_unlock(&asteroidVectorLock);

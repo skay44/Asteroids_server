@@ -9,6 +9,7 @@
 #define PROJECTILE_CODE 0b10000010
 #define ASTEROID_CODE   0b10000100
 #define DELETUS_CODE    0b10001000
+#define SCORE_CODE      0b10101001
 
 #define PLAYER_SIZE 25
 typedef struct _playerState {
@@ -78,6 +79,13 @@ typedef struct _sendFrameSerwerInfo {
     unsigned char header;     //kod okreslajacy co to za rodzaj ramki (inne niz 0b1000001 oraz 0b10000010)
     unsigned char code;
 } sendFrameSerwerInfo;
+#pragma pack(pop)
+
+#pragma pack(push,1)
+typedef struct _sendScoreFrame {
+    unsigned char header;     //kod okreslajacy co to za rodzaj ramki (inne niz 0b1000001 oraz 0b10000010)
+    int score;
+} sendScoreFrame;
 #pragma pack(pop)
 
 #pragma pack(push,1)

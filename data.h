@@ -19,7 +19,7 @@ pthread_mutex_t idsOfProjectilesToDeleteLock;
 pthread_mutex_t idsOfAsteroidsToDeleteLock;
 pthread_mutex_t playersToDeleteLock;
 pthread_mutex_t playersConnectionLocks;
-
+pthread_mutex_t gameScoreUpdateLock;
 
 vectorPlayerState players;
 vectorProjectile projectiles;
@@ -31,6 +31,7 @@ vectorInt playerConnections;
 
 int projectileID;
 int asteroidID;
+int gameScore;
 
 //dodawanie do wektora graczy
 void addToPlayerVector(playerState toAdd){
@@ -111,6 +112,23 @@ bool updatePlayerVector(playerState toUpdate){
     }
     pthread_mutex_unlock(&projectileVectorLock);
     return false;
+}
+
+void addAsteroidGamePoints(asteroid asterCollision)
+{
+    char size = asterCollision.size;
+    pthread_mutex_lock(&gameScoreUpdateLock);
+    gameScore+=(size*5);
+    pthread_mutex_unlock(&gameScoreUpdateLock);
+}
+
+void subtractGamePoints()
+{
+    pthread_mutex_lock(&gameScoreUpdateLock);
+    gameScore-=100;
+    if(gameScore<0)
+        gameScore=0;
+    pthread_mutex_unlock(&gameScoreUpdateLock);
 }
 
 #endif //SERVER_DATA_H

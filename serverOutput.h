@@ -42,7 +42,7 @@ void sendAsteroidDeleteData(vectorInt* a, int sendTo){
 
 void sendPlayerDeleteData(vectorPlayerState * a, int sendTo){
     for(int i = 0; i < a->size; i++){
-        printf("Send %d to %d",a->arr[i].connectionAddr, sendTo);
+        printf("Send %d to %d\n",a->arr[i].connectionAddr, sendTo);
         deletus psf = {DELETUS_CODE, 1, a->arr[i].playerID};
         send(sendTo, (char*)&psf, sizeof(deletus), 0);
     }
@@ -50,10 +50,16 @@ void sendPlayerDeleteData(vectorPlayerState * a, int sendTo){
 
 void sendYouDiedData(vectorPlayerState * a){
     for(int i = 0; i < a->size; i++){
-        printf("You died sent");
+        printf("You died sent\n");
         deletus psf = {DELETUS_CODE, 4, a->arr[i].playerID};
         send(a->arr[i].connectionAddr, (char*)&psf, sizeof(deletus), 0);
     }
+}
+
+void sendGameScoreData(int sendTo){
+    printf("Score: %d to %d\n",gameScore,sendTo);
+    sendScoreFrame sfsi = {SCORE_CODE,gameScore};
+    send(sendTo, (char*)&sfsi, sizeof(sendScoreFrame), 0);
 }
 
 //TODO: TEST
@@ -97,6 +103,11 @@ void* handleOutput(){
         vectorPlayerStateClear(&playersToDelete);
         pthread_mutex_unlock(&playersToDeleteLock);
 
+        pthread_mutex_lock(&gameScoreUpdateLock);
+        for(int i=0;i<numberOfRecievers;i++) {
+            sendGameScoreData(playerConnections.arr[i]);
+        }
+        pthread_mutex_unlock(&gameScoreUpdateLock);
 
         for(int i=0;i<numberOfRecievers;i++){
             //wysylanie do gracza info o innych graczach
