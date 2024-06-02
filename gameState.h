@@ -11,10 +11,28 @@
 #include "vector.h"
 #include "data.h"
 
-#define ASTEROID_SPAWN_DELAY 3
-#define MAX_ASTEROID_AMOUNT 1
+#define ASTEROID_SPAWN_DELAY 5
+#define MAX_ASTEROID_AMOUNT 20
 
-char summonAsteroids(double* timePassed){
+char summonAsteroidsOfSaidSize(int size, float locX, float locY){
+    asteroid a;
+    a.posX = locX;
+    a.posY = locY;
+    a.asteroidID = asteroidID;
+    a.size = size;
+    a.rotation = rand() % 180;
+    a.speedX = rand() % 100 - 50;
+    a.speedY = rand() % 100 - 50;
+    int speed = sqrt(a.speedX * a.speedX + a.speedY * a.speedY);
+    a.speedX = a.speedX / speed * 100;
+    a.speedY = a.speedY / speed * 100;
+    pthread_mutex_lock(&asteroidVectorLock);
+    vectorAsteroidPush(&asteroids,a);
+    asteroidID++;
+    pthread_mutex_unlock(&asteroidVectorLock);
+}
+
+char summonAsteroids(double* timePassed, int* asteroidsAount){
     asteroid a;
     int attempt = 0;
     int success = 0;
@@ -34,7 +52,7 @@ char summonAsteroids(double* timePassed){
     }
     if(success == 1) {
         a.asteroidID = asteroidID;
-        a.size = rand() % 3 + 1;
+        a.size = rand() % 5 + 1;
 
         a.rotation = rand() % 180;
         a.speedX = rand() % 100 - 50;
@@ -43,6 +61,7 @@ char summonAsteroids(double* timePassed){
         a.speedX = a.speedX / speed * 100;
         a.speedY = a.speedY / speed * 100;
         (*timePassed) -= ASTEROID_SPAWN_DELAY;
+        (*asteroidsAount) += pow(3,a.size-1);
         addToAsteroidVector(a);
         asteroidID++;
         return 1;
@@ -115,7 +134,7 @@ char checkForCollision(float ax, float ay, float bx, float by, float sizeA, floa
     }
 }
 
-void collision(){
+void collision(int* asteroidsAmount){
     vectorPlayerState playersCopy;
     vectorProjectile projectilesCopy;
     vectorAsteroid asteroidsCopy;
@@ -160,7 +179,6 @@ void collision(){
                 vectorPlayerStateRemove(&playersCopy, playersCopy.arr[i]);
                 pthread_mutex_unlock(&playerVectorLock);
 
-
                 pthread_mutex_lock(&idsOfAsteroidsToDeleteLock);
                 vectorIntPush(&idsOfAsteroidsToDelete, asteroidsCopy.arr[j].asteroidID);
                 pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
@@ -187,6 +205,14 @@ void collision(){
                     ASTEROID_SIZE * asteroidsCopy.arr[j].size);
             if(c == 1){
                 //deleting projectile
+                if(asteroidsCopy.arr[j].size == 1){
+                    (*asteroidsAmount)--;
+                }
+                else{
+                    for(int i = 0; i < 3; i++){
+                        summonAsteroidsOfSaidSize(asteroidsCopy.arr[j].size - 1, asteroidsCopy.arr[j].posX, asteroidsCopy.arr[j].posY);
+                    }
+                }
 
                 pthread_mutex_lock(&idsOfProjectilesToDeleteLock);
                 vectorIntPush(&idsOfProjectilesToDelete, projectilesCopy.arr[i].projectileID);
@@ -194,19 +220,21 @@ void collision(){
 
                 pthread_mutex_lock(&projectileVectorLock);
                 vectorProjectileRemove(&projectiles,projectilesCopy.arr[i]);
-                vectorProjectileRemove(&projectilesCopy,projectilesCopy.arr[i]);
                 pthread_mutex_unlock(&projectileVectorLock);
 
-                //deleting asteroid
+                vectorProjectileRemove(&projectilesCopy,projectilesCopy.arr[i]);
 
+                //deleting asteroid + creating new ones
                 pthread_mutex_lock(&idsOfAsteroidsToDeleteLock);
                 vectorIntPush(&idsOfAsteroidsToDelete, asteroidsCopy.arr[j].asteroidID);
                 pthread_mutex_unlock(&idsOfAsteroidsToDeleteLock);
 
                 pthread_mutex_lock(&asteroidVectorLock);
                 vectorAsteroidRemove(&asteroids, asteroidsCopy.arr[j]);
-                vectorAsteroidRemove(&asteroidsCopy, asteroidsCopy.arr[j]);
                 pthread_mutex_unlock(&asteroidVectorLock);
+
+                vectorAsteroidRemove(&asteroidsCopy, asteroidsCopy.arr[j]);
+
                 i--;
                 j--;
                 break;
@@ -223,6 +251,7 @@ void* gameplayLoop(void* params){
     LARGE_INTEGER frequency;        // ticks per second
     LARGE_INTEGER t1, t2;           // ticks
     double deltaTime;
+    int asteroidsAmount = 0;
 
     GLP* a = (GLP*) params;
     vectorPlayerStateCreate(&players);
@@ -240,7 +269,7 @@ void* gameplayLoop(void* params){
     double asteroidSpawnTime = ASTEROID_SPAWN_DELAY;
     while(1){
         // 1.handling change in time
-
+        printf("asteroids amount: %d\n", asteroidsAmount);
         Sleep(1);
         t1 = t2;
         // start timer
@@ -256,12 +285,12 @@ void* gameplayLoop(void* params){
 
         //3.handling collisions
 
-        collision();
+        collision(&asteroidsAmount);
 
         //4.spawning new entities
 
-        if(asteroidSpawnTime > ASTEROID_SPAWN_DELAY && asteroids.size < MAX_ASTEROID_AMOUNT){
-            summonAsteroids(&asteroidSpawnTime);
+        if(asteroidSpawnTime > ASTEROID_SPAWN_DELAY && asteroidsAmount < MAX_ASTEROID_AMOUNT){
+            summonAsteroids(&asteroidSpawnTime, &asteroidsAmount);
         }
     }
 }
